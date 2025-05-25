@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="tr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kristal Top: Pinball Macerası</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Genel Sıfırlama ve Kurulum --- */
+        :root {
+            --primary-bg: #2c3e50; /* Koyu Mavi-Gri */
+            --secondary-bg: #34495e; /* Biraz Daha Açık Mavi-Gri */
+            --accent-color: #e74c3c; /* Kırmızı */
+            --accent-color-hover: #c0392b; /* Daha Koyu Kırmızı */
+            --positive-accent: #2ecc71; /* Yeşil */
+            --positive-accent-hover: #27ae60; /* Daha Koyu Yeşil */
+            --booster-color: #3498db; /* Hızlandırıcı için Mavi */
+            --booster-color-hover: #2980b9; /* Hızlandırıcı üzerine gelindiğinde Daha Koyu Mavi */
+            --text-color: #ecf0f1; /* Açık Gri / Kirli Beyaz */
+            --text-color-dark: #bdc3c7; /* Orta Gri */
+            --border-color: #4a627a;
+            --shadow-color: rgba(0,0,0,0.25);
+            --font-family: 'Cairo', 'Tahoma', sans-serif;
+            --canvas-bg: #1d2a38;
+            --canvas-border: #56708a;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+            background-color: var(--primary-bg); /* Güncellenmiş gövde arka planı */
+            color: var(--text-color);
+        }
+
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1vmin;
+        }
+
+        /* --- Başlangıç Ekranı --- */
+        #startScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+        #startScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #startScreenContent {
+            background-color: var(--secondary-bg);
+            padding: clamp(20px, 5vmin, 50px);
+            border-radius: 1.5vmin;
+            text-align: center;
+            box-shadow: 0 1vmin 4vmin var(--shadow-color);
+            border: 1px solid var(--border-color);
+            max-width: 90vw;
+            width: 500px; /* Başlangıç modalı için maksimum genişlik */
+        }
+        #startScreenContent h1 {
+            font-size: clamp(1.8em, 4vmin, 2.8em);
+            color: var(--accent-color);
+            margin-top: 0;
+            margin-bottom: 0.5em;
+        }
+        #startScreenContent p {
+            font-size: clamp(1em, 2vmin, 1.2em);
+            line-height: 1.6;
+            margin-bottom: 1.5em;
+            color: var(--text-color-dark);
+        }
+        #startGameFromOverlayButton {
+            background-color: var(--positive-accent) !important;
+            font-size: clamp(1.1em, 2.5vmin, 1.5em) !important;
+            padding: 0.8em 1.8em !important;
+        }
+        #startGameFromOverlayButton:hover {
+            background-color: var(--positive-accent-hover) !important;
+        }
+        #authorCredit {
+            margin-top: 2em;
+            font-size: clamp(0.7em, 1.5vmin, 0.9em);
+            color: var(--text-color-dark);
+            opacity: 0.7;
+        }
+
+        /* --- Ana UI Konteynırı --- */
+        #mainUIContainer {
+            background-color: var(--secondary-bg);
+            border-radius: 1.5vmin;
+            box-shadow: 0 1vmin 3vmin var(--shadow-color);
+            border: 0.1vmin solid var(--border-color);
+            width: 98vw;
+            height: 98vh;
+            max-width: 1200px;
+            padding: 1.5vmin;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5vmin;
+            font-size: clamp(11px, 1.6vmin, 16px); /* Biraz artırılmış temel yazı tipi */
+        }
+
+        /* --- Talimatlar Konteynırı (Genel mod talimatları) --- */
+        .instructions-container {
+            padding: 0.8em 1em;
+            border-radius: 0.8em;
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        #generalModeInstructions, #gameStatus { /* modeInstructions, generalModeInstructions olarak yeniden adlandırıldı */
+            margin: 0.3em 0;
+            font-size: 0.95em;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+        #gameStatus:empty { display: none; }
+
+        /* --- Oyun Alanı (Tuval + Yan Yana Kontroller) --- */
+        #gameAreaContainer {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5vmin;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* --- Tuval Kapsayıcısı --- */
+        #canvasWrapper {
+            flex-basis: 65%;
+            flex-shrink: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            background-color: var(--canvas-bg); /* Canvas alanının kendisi için arka plan */
+            border-radius: 1vmin;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+        canvas {
+            border: 0.2vmin solid var(--canvas-border);
+            cursor: default;
+            box-shadow: 0 0.5vmin 1.5vmin rgba(0,0,0,0.4);
+            border-radius: 0.8vmin; /* Kapsayıcı içindeki canvas için biraz daha küçük yarıçap */
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            aspect-ratio: 800 / 700;
+            max-width: 800px;
+            max-height: 700px;
+        }
+        
+        /* --- Kontrol Konteynırı (Sağ Panel) --- */
+        #controlsContainer {
+            flex-basis: 35%;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            padding: 1em;
+            background-color: var(--primary-bg);
+            border-radius: 1em;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        /* controlsContainer içindeki paneller için genel stil */
+        #designControls, #gameInfo, #mainControls {
+            padding: 1em; 
+            background-color: var(--secondary-bg);
+            border-radius: 0.8em;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0.2em 0.5em rgba(0,0,0,0.15);
+        }
+        
+        /* #designControls için özel - ikon butonları için flex düzeni */
+        #designControls {
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 0.6em; 
+        }
+
+        #designControls > p, /* Tasarım araçları için Başlık */
+        #gameInfo > p {     /* Oyun bilgisi için Başlık */
+            font-weight: 600; 
+            margin-top: 0;
+            margin-bottom: 1em; 
+            font-size: 1.15em;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--accent-color); 
+            padding-bottom: 0.5em;
+            width: 100%; /* Başlığın tam genişlik almasını sağla */
+            text-align: center; /* Başlık metnini ortala */
+        }
+        
+        #designControls #toolSpecificInstructions {
+            width: 100%;
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--text-color-dark);
+            margin-top: -0.5em; /* Başlığa göre boşluğu ayarla */
+            margin-bottom: 0.8em; /* Butonlardan önce boşluk */
+            padding: 0.4em 0.6em;
+            background-color: var(--primary-bg);
+            border-radius: 0.5em;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+
+        button {
+            margin: 0.4em 0.2em; 
+            padding: 0.8em 1.2em; 
+            font-size: 0.95em; 
+            font-weight: 600;
+            border: none;
+            border-radius: 0.6em;
+            background-color: #4a90e2; /* Varsayılan buton rengi, ezilebilir */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s, transform 0.15s;
+            box-shadow: 0 0.25em 0 var(--shadow-color); 
+            flex-grow: 1;
+            min-width: 110px;
+        }
+        
+        /* Sadece ikon içeren tasarım aracı butonları için stil */
+        #designControls button {
+            flex-grow: 0; 
+            flex-basis: auto; 
+            width: 48px;    
+            height: 48px;   
+            padding: 0;     
+            font-size: 1.7em; 
+            line-height: 48px; 
+            text-align: center; 
+            min-width: 0; 
+            margin: 0; 
+        }
+
+
+        button:hover {
+            background-color: #357ABD; /* Varsayılan hover durumu, ezilebilir */
+            box-shadow: 0 0.3em 0.1em var(--shadow-color);
+            transform: translateY(-0.05em);
+        }
+        button:active {
+            background-color: #2a659b; /* Varsayılan aktif, ezilebilir */
+            transform: translateY(0.1em); 
+            box-shadow: 0 0.1em 0 var(--shadow-color);
+        }
+
+        .selected-tool {
+            background-color: var(--accent-color) !important;
+            box-shadow: 0 0 1.2em var(--accent-color), 0 0.25em 0 #7f2316 !important; 
+            transform: translateY(-0.05em) scale(1.03) !important;
+            border: 2px solid rgba(255,255,255,0.5) !important; 
+        }
+        #clearObstaclesButton, #toolEraser, #resetGameButton { 
+            background-color: var(--accent-color) !important; 
+            box-shadow: 0 0.25em 0 #7f2316 !important;
+        }
+        #clearObstaclesButton:hover, #toolEraser:hover, #resetGameButton:hover { 
+            background-color: var(--accent-color-hover) !important; 
+        }
+
+        #startGameButton { 
+            background-color: var(--positive-accent) !important; 
+            font-size: 1.05em !important; 
+            box-shadow: 0 0.25em 0 #1b7942 !important;
+        }
+        #startGameButton:hover { 
+            background-color: var(--positive-accent-hover) !important; 
+        }
+
+        /* Yeni Hızlandırıcı Buton Stili */
+        #toolBooster {
+             background-color: var(--booster-color) !important;
+             box-shadow: 0 0.25em 0 #1f6a9c !important;
+        }
+        #toolBooster:hover {
+             background-color: var(--booster-color-hover) !important;
+        }
+        #toolBooster.selected-tool { /* Seçilen hızlandırıcının gerekirse belirgin bir vurgulaması olduğundan veya vurgu rengini paylaştığından emin olun */
+            background-color: var(--accent-color) !important; /* Veya hızlandırıcıya özel seçilmiş renk kullan */
+            box-shadow: 0 0 1.2em var(--accent-color), 0 0.25em 0 #7f2316 !important;
+        }
+        
+        /* #mainControls ve iç grupları için stiller */
+        #mainControls {
+            display: flex;
+            flex-direction: column; 
+            gap: 1em; 
+        }
+
+        .action-buttons-group {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 0.8em;
+        }
+
+        .action-buttons-group button {
+            flex-grow: 1; 
+            flex-basis: calc(50% - 0.4em); 
+            min-width: 130px; 
+            font-size: 1.05em !important; 
+        }
+        
+        .game-stats-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8em;
+        }
+
+        #scoreP, #ballsP, #highScoreP, #moneyP, #currentLevelP {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--primary-bg); 
+            padding: 0.6em 1em; 
+            border-radius: 0.6em;
+            display: inline-flex; 
+            align-items: center;
+            margin: 0.3em;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            flex-grow: 1; /* Büyümelerine izin ver */
+            text-align: center;
+            justify-content: center;
+        }
+        #scoreP::before { content: "🎯 "; margin-left: 0.3em; }
+        #ballsP::before { content: "⚾ "; margin-left: 0.3em; }
+        #highScoreP::before { content: "🏆 "; margin-left: 0.3em; }
+        #moneyP::before { content: "💰 "; margin-left: 0.3em; }
+        #currentLevelP::before { content: "🏞️ "; margin-left: 0.3em; }
+
+
+         #gameInfo div {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8em;
+         }
+
+        #tempMessage {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(20, 30, 40, 0.95); 
+            color: white;
+            padding: clamp(20px, 3vmin, 40px) clamp(25px, 4vmin, 50px);
+            border-radius: 1em;
+            font-size: clamp(1.1em, 2.5vmin, 1.8em);
+            font-weight: 600; 
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            box-shadow: 0 0.8em 2.5em rgba(0,0,0,0.4);
+            border: 0.1em solid var(--accent-color); 
+            max-width: 85vw;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #tempMessage small {
+            display: block;
+            font-size: 0.7em;
+            opacity: 0.8;
+            margin-top: 0.5em;
+        }
+
+
+        /* Kontrol konteynırı için kaydırma çubuğu stilleri */
+        #controlsContainer::-webkit-scrollbar { width: 10px; }
+        #controlsContainer::-webkit-scrollbar-track { background: var(--secondary-bg); border-radius: 10px; }
+        #controlsContainer::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+        #controlsContainer::-webkit-scrollbar-thumb:hover { background: var(--accent-color-hover); }
+
+
+        /* --- Küçük Ekranlar için Medya Sorgusu (örn. Mobil Dikey) --- */
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            #mainUIContainer {
+                width: 100vw;
+                height: 100vh;
+                border-radius: 0;
+                padding: 1vmin;
+                font-size: clamp(10px, 2.3vmin, 14px); 
+            }
+            #gameAreaContainer {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            #canvasWrapper { flex-basis: auto; width: 100%; }
+            #controlsContainer { flex-basis: auto; width: 100%; max-height: none; overflow-y: visible;}
+
+            #designControls {
+                gap: 0.5em; 
+            }
+            #designControls button {
+                width: 44px;
+                height: 44px;
+                font-size: 1.6em;
+                line-height: 44px;
+            }
+             #designControls #toolSpecificInstructions {
+                font-size: 0.85em;
+                margin-bottom: 0.6em;
+            }
+            .action-buttons-group button { flex-basis: 42%; min-width: 100px; } 
+            #startScreenContent { width: 90vw; }
+             #scoreP, #ballsP, #highScoreP, #moneyP, #currentLevelP { font-size: 0.95em; padding: 0.5em 0.8em;}
+        }
+         @media (max-width: 480px) {
+              #designControls {
+                gap: 0.4em; 
+              }
+              #designControls button {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5em;
+                line-height: 40px;
+              }
+              #designControls #toolSpecificInstructions {
+                font-size: 0.8em;
+                padding: 0.3em 0.5em;
+              }
+              .action-buttons-group button { flex-basis: 85%; } 
+              #scoreP, #ballsP, #highScoreP, #moneyP, #currentLevelP { font-size: 0.9em; padding: 0.5em 0.8em;}
+         }
+
+    </style>
+    <!-- Arka plan müzik dosyası -->
+    <script>
+        // Sayfa yüklendikten sonra müziği çal
+        window.addEventListener('DOMContentLoaded', function() {
+            // Ses öğesi JavaScript ile işlenecek
+            var bgMusic = document.getElementById('backgroundMusic');
+            
+            // Sayfaya tıklandığında müziği çal (tarayıcı kısıtlamalarını aşmak için)
+            document.addEventListener('click', function playAudio() {
+                bgMusic.play().catch(function(error) {
+                    console.log('Müzik çalınamadı:', error);
+                });
+                document.removeEventListener('click', playAudio);
+            }, { once: true });
+            
+            // Müziği otomatik olarak çalmayı dene (bazı tarayıcılarda çalışmayabilir)
+            bgMusic.play().catch(function(error) {
+                console.log('Müzik tıklamadan sonra çalınacak');
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Arka plan müzik için ses öğesi -->
+    <audio id="backgroundMusic" loop preload="auto" style="display: none;">
+        <source src="assets/sounds/TownTheme.mp3" type="audio/mpeg">
+    </audio>
+    <div id="startScreen" role="dialog" aria-labelledby="startScreenTitle" aria-modal="true">
+        <div id="startScreenContent">
+            <div class="game-logo">
+                <img src="assets/logo.jpeg" alt="Kristal Top: Pinball Macerası Logo" style="max-width: 300px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
+            </div>
+
+            <p>Hoş geldiniz! Benzersiz masanızı oluşturun, puan ve para toplayın ve en yüksek skoru elde etmeye çalışın. Her yeni başlangıçta farklı seviyeleri keşfedin!</p>
+            <button id="startGameFromOverlayButton">Oynamaya Başla!</button>
+            <div id="authorCredit">Imane Keradi tarafından yapılmıştır</div>
+        </div>
+    </div>
+
+    <div id="mainUIContainer" style="display:none;" role="main"> 
+        <div id="tempMessage" role="alert" aria-live="assertive"></div>
+        <div class="instructions-container" role="region" aria-label="Oyun Talimatları">
+            <p id="generalModeInstructions">Tasarım Modu: Bir araç seçin ve bir öğe eklemek için panoya tıklayın.</p>
+            <p id="gameStatus" role="status" aria-live="polite"></p>
+        </div>
+
+        <div id="gameAreaContainer">
+            <div id="canvasWrapper">
+                <canvas id="gameCanvas" width="800" height="700" aria-label="Oyun Panosu"></canvas>
+            </div>
+            <div id="controlsContainer" role="form" aria-label="Kontroller ve Bilgiler">
+                <div id="designControls" role="toolbar" aria-label="Tasarım Araçları">
+                    <p>Tasarım Araçları:</p>
+                    <p id="toolSpecificInstructions" style="display: none;" aria-live="polite"></p>
+                    <button id="toolWall" title="Duvar" aria-label="Duvar Yerleştirme Aracı">🧱</button>
+                    <button id="toolSideWall" title="Yan Duvar" aria-label="Yan Duvar Yerleştirme Aracı">❚</button>
+                    <button id="toolStone" title="Taş" aria-label="Taş Yerleştirme Aracı">🪨</button>
+                    <button id="toolTree" title="Ağaç" aria-label="Ağaç Yerleştirme Aracı">🌳</button>
+                    <button id="toolBooster" title="Hızlandırıcı" aria-label="Hızlandırıcı Yerleştirme Aracı">🚀</button>
+                    <button id="toolEraser" title="Silgi" aria-label="Silgi Aracı">⌫</button>
+                    <button id="clearObstaclesButton" title="Tümünü Temizle" aria-label="Tüm Öğeleri Temizle">🗑️</button>
+                </div>
+                 <div id="gameInfo" role="region" aria-label="Oyun Bilgileri">
+                     <p>Oyun Bilgileri:</p>
+                     <div>
+                        <p id="currentLevelP">Seviye: </p>
+                        <p id="highScoreP">En Yüksek Skor: 0</p>
+                        <p id="moneyP">Bakiye: 1000</p> 
+                     </div>
+                </div>
+                <div id="mainControls" role="region" aria-label="Ana Kontroller">
+                    <div class="action-buttons-group">
+                        <button id="startGameButton" aria-label="Oyunu Başlat veya Topu Fırlat">Oyunu Başlat</button>
+                        <button id="resetGameButton" aria-label="Oyunu Tamamen Sıfırla">Oyunu Tamamen Sıfırla</button>
+                    </div>
+                    <div class="game-stats-group">
+                        <p id="ballsP">Toplar: 3</p>
+                        <p id="scoreP">Puanlar: 0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const startScreenDiv = document.getElementById('startScreen');
+        const startGameFromOverlayButton = document.getElementById('startGameFromOverlayButton');
+        const mainUIContainerDiv = document.getElementById('mainUIContainer');
+
+        const generalModeInstructionsP = document.getElementById('generalModeInstructions');
+        const toolSpecificInstructionsP = document.getElementById('toolSpecificInstructions');
+        const gameStatusP = document.getElementById('gameStatus');
+        const scoreP = document.getElementById('scoreP');
+        const ballsP = document.getElementById('ballsP');
+        const highScoreP = document.getElementById('highScoreP');
+        const moneyP = document.getElementById('moneyP'); 
+        const currentLevelP = document.getElementById('currentLevelP');
+        const tempMessageDiv = document.getElementById('tempMessage');
+        const startGameButton = document.getElementById('startGameButton');
+        const clearObstaclesButton = document.getElementById('clearObstaclesButton');
+        const resetGameButton = document.getElementById('resetGameButton'); 
+        const toolWallButton = document.getElementById('toolWall');
+        const toolSideWallButton = document.getElementById('toolSideWall'); 
+        const toolStoneButton = document.getElementById('toolStone');
+        const toolTreeButton = document.getElementById('toolTree');
+        const toolBoosterButton = document.getElementById('toolBooster');
+        const toolEraserButton = document.getElementById('toolEraser');
+        const designControlsDiv = document.getElementById('designControls');
+        const gameInfoDiv = document.getElementById('gameInfo');
+
+        const backgroundCanvas = document.createElement('canvas');
+        backgroundCanvas.width = 800; 
+        backgroundCanvas.height = 700; 
+        const bgCtx = backgroundCanvas.getContext('2d');
+
+        let currentLevelIndex = 0;
+        const levels = [
+            { name: "Yeşil Orman Sahası", type: "nature", description: "Klasik yeşillik, rahat bir başlangıç için ideal.", icon: "🏞️" },
+            { name: "Çöl Vahası", type: "desert", description: "Yakıcı kumlar ve parlak güneş, farklı bir meydan okuma.", icon: "🏜️" },
+            { name: "Yıldızlar Uzayı", type: "space", description: "Gezegenler ve yıldızlar arasında bir yolculuk.", icon: "🌌" },
+            { name: "Gün Batımı Sahili", type: "beach", description: "Dalga sesleriyle sahilde rahatlayın (hayal edin).", icon: "🏖️" }
+        ];
+        const LEVEL_KEY = 'pinballGolfLevelIndex_v1.2'; 
+
+
+        const MODE_DESIGN = 'design';
+        const MODE_PLAY = 'play';
+        let currentMode = MODE_DESIGN; 
+        let currentTool = 'wall';
+        let gameInitialized = false; 
+
+        const INITIAL_BALLS = 3;
+        const INITIAL_MONEY = 1000;
+
+        let gameScore = 0;
+        let ballsLeft = INITIAL_BALLS;
+        let gameActive = false;
+        let highScore = 0;
+        const HIGH_SCORE_KEY = 'pinballGolfHighScore_v2.1'; 
+        let playerMoney = INITIAL_MONEY; 
+        const MONEY_KEY = 'pinballGolfPlayerMoney_v2.1'; 
+
+        const OBSTACLE_COSTS = { wall: 50, sideWall: 60, stone: 75, tree: 100, booster: 80 };
+        const MONEY_PER_SECOND_IN_PLAY = 2; 
+        const MONEY_PER_POINT_BONUS = 0.05; 
+        let playTimeMoneyCounter = 0; 
+
+        const GRAVITY = 0.12;
+        const BALL_START_X = 800 / 2; 
+        const BALL_START_Y = 100;
+
+        const PLACEMENT_MARGIN_TOP = 50;
+        const PLACEMENT_MARGIN_SIDES = 50;
+        const PLACEMENT_RESTRICTED_BOTTOM_Y = 700 - 150; 
+        const DESIGN_GRID_SPACING = 25;
+
+        let particles = [];
+
+        const ball = { radius: 10, color: '#FDFDFD', shadowColor: 'rgba(0,0,0,0.4)', highlightColor: 'rgba(255,255,255,0.85)', x: BALL_START_X, y: BALL_START_Y, dx: 0, dy: 0, friction: 0.998, isMoving: false, minSpeed: 0.05, restitution: 0.5 };
+        const drain = { x: 800 / 2, y: 700 - 60, radius: 35, colorOuter: '#1a1a1a', colorInner: '#000000', rimColor: '#333333', visualBaseYOffset: 3 };
+
+        let obstacles = []; 
+        const STONE_BUMPER_RESTITUTION = 0.7; 
+        const TREE_BUMPER_RESTITUTION = 0.6;  
+        const BOOSTER_RESTITUTION = 0.4; 
+        const BOOSTER_POWER = 18; 
+        const MAX_SPEED_AFTER_BOOST = 28; 
+        const BUMPER_KICK_MAGNITUDE = 30; // DEĞİŞTİRİLDİ: 20'den 30'a yükseltildi
+        const WALL_OBSTACLE_RESTITUTION = 0.65; // DEĞİŞTİRİLDİ: 0.5'ten 0.65'e yükseltildi
+        const CANVAS_EDGE_RESTITUTION = 0.6; // DEĞİŞTİRİLDİ: 0.4'ten 0.6'ya yükseltildi
+        const POINTS_STONE = 25;
+        const POINTS_TREE = 15;
+        const POINTS_BOOSTER = 10; 
+        const POINTS_FLIPPER_HIT = 10;
+
+        const FLIPPER_LENGTH = 95;
+        const FLIPPER_WIDTH = 22;
+        const FLIPPER_COLOR = '#BF6A30'; 
+        const FLIPPER_HIGHLIGHT_COLOR = '#E67E22'; 
+        const FLIPPER_REST_ANGLE_LEFT = Math.PI / 7;
+        const FLIPPER_REST_ANGLE_RIGHT = Math.PI - Math.PI / 7;
+        const FLIPPER_ACTIVE_ANGLE_LEFT = -Math.PI / 4.5;
+        const FLIPPER_ACTIVE_ANGLE_RIGHT = Math.PI + Math.PI / 4.5;
+        const FLIPPER_SPEED = 0.45; 
+        const FLIPPER_POWER = 42;   // DEĞİŞTİRİLDİ: 30'dan 42'ye yükseltildi
+        const FLIPPER_RESTITUTION_PASSIVE = 0.7; // DEĞİŞTİRİLDİ: 0.6'dan 0.7'ye yükseltildi
+        const FLIPPER_RESTITUTION_ACTIVE = 0.3; 
+        const MAX_SPEED_AFTER_FLIPPER = 30; // DEĞİŞTİRİLDİ: 25'ten 30'a yükseltildi
+
+        const FLIPPER_X_OFFSET_MULTIPLIER = 0.8;
+        const leftFlipper = { x: 800 / 2 - FLIPPER_LENGTH * FLIPPER_X_OFFSET_MULTIPLIER, y: 700 - 100, width: FLIPPER_WIDTH, length: FLIPPER_LENGTH, angle: FLIPPER_REST_ANGLE_LEFT, targetAngle: FLIPPER_REST_ANGLE_LEFT, color: FLIPPER_COLOR, active: false };
+        const rightFlipper = { x: 800 / 2 + FLIPPER_LENGTH * FLIPPER_X_OFFSET_MULTIPLIER, y: 700 - 100, width: FLIPPER_WIDTH, length: FLIPPER_LENGTH, angle: FLIPPER_REST_ANGLE_RIGHT, targetAngle: FLIPPER_REST_ANGLE_RIGHT, color: FLIPPER_COLOR, active: false };
+
+        const NUM_LAUNCH_SAMPLES = 30; const LAUNCH_ANGLE_BASE = Math.PI / 2; const LAUNCH_ANGLE_SPREAD = Math.PI / 2.5; const LAUNCH_SPEED_MIN = 10; const LAUNCH_SPEED_MAX = 16; const LAUNCH_SIMULATION_STEPS = 40; const LAUNCH_SIMULATION_STEP_DURATION = 1/60; const SIM_GRAVITY = GRAVITY * 2; 
+
+        const PIXEL_ART_ROCK_SCALE = 2; const PIXEL_ART_ROCK_COLOR_MAP = { 'O': '#1c1a25', 'H': '#cdc8d0', 'L': '#a9a2ad', 'M': '#827d86', 'D': '#605b65', 'C': '#47424e', 'S': '#677580', 'T': '#8c99a4', ' ': 'transparent'}; const DETAILED_ROCK_PATTERN = [ "                                      ", "              TTTTTTTTTTT             ", "           TTTSSSSSSSSSTTT            ", "         TTSSSSDMDMLSSDMSSTT          ", "        TSOMMMMMMMMMMMMMOTSST         ", "       TSOMMMLLLLHHLLLMMMOTSST        ", "      TSOMMLLLLHHHHHHLLMMMOTSST       ", "     TSSOMLLHHHHHHHHHHLLMMOTSST       ", "     TSSOMLLHHHHHHHHHHLLMMOTSST       ", "    TSSOMLLHHHHHHHHHHLLLLMMOTSST      ", "    TSSOMLLLLHHHHHHHLLLLLMMMOTST      ", "   TSSOMMMLLLLHHHHHLLLLLLMMMOTST      ", "   TSSOMMMLLLLLLLLLLLLLLLMMMMOTST     ", "   TSSOMMMMMLLLLLLLLLLMMMMMMMOTST     ", "  TSSOOMMMMMMMMMMMMMMMMMMMMMOOTST     ", "  TSSOOMMMMMDDDDMMMMMMMMMMOOTST     ", "  TSSOOOMMMMDDDDDDDDMMMMMMMMOOTST     ", "  TSSOOOMMMDDCDDDCDDMMMMMMMMOOTST     ", "  TSOOOOOMMDDCDCDCDMMMMMMMMOOOTST     ", "   TSOOOOOMMDDDDDDDMMMMMMMOOOOTST     ", "   TSSOOOOOOMMMMMMMMMMMMOOOOOOTST     ", "    TSTOOOOOOOOOOOOOOOOOOOOOOTST      ", "     TSTTOOOOOOOOOOOOOOOOOTTST        ", "      TTSTTTTTTTTTTTTTTTTSTT          ", "        TTTTTTTTTTTTTTTTT             ", "           TTTTTTTTTTT                ", "                                      ", "                                      "  ]; const PIXEL_ART_ROCK_PATTERN_HEIGHT_CHARS = DETAILED_ROCK_PATTERN.length; const PIXEL_ART_ROCK_PATTERN_WIDTH_CHARS = DETAILED_ROCK_PATTERN[0].length; const ACTUAL_PIXEL_ART_ROCK_WIDTH = PIXEL_ART_ROCK_PATTERN_WIDTH_CHARS * PIXEL_ART_ROCK_SCALE; const ACTUAL_PIXEL_ART_ROCK_HEIGHT = PIXEL_ART_ROCK_PATTERN_HEIGHT_CHARS * PIXEL_ART_ROCK_SCALE;
+        const PIXEL_ART_TREE_SCALE = 2; const PIXEL_ART_TREE_COLOR_MAP = {'W': '#FFFFFF', 'O': '#000000', 'H': '#95d663', 'G': '#5aa844', 'D': '#3a752c', 'P': '#4a8c3a', 'h': '#a06c49', 't': '#7b5133', 'd': '#573924', 'S': '#c0ecca', ' ': 'transparent' }; const DETAILED_TREE_PATTERN = [ "          WWWWWWWWWWWWW          ", "        WWOOOOOOOOOOOWW        ", "       WOOHHHHHHHHHHOOOW       ", "      WOOHHHHHPHHHHHHOOOW      ", "     WOOHHPHGGHPHGGHHOOOW     ", "    WOOHPGGGGGGGGGPHGHOOOW    ", "   WOOHGGHGGPGHGGHGGHOOOW   ", "  WOOGGGGGGGHGGGGGGHGGDOOW  ", "  WOOGPGGGGGGGGGGGGGPDDOOW  ", " WOOGGGHGGGGGGGGGGGDDDDOOW ", " WOOGGGGGDPGGGGGGDPDDDDOOW ", " WOOGDGGGGGGPDGGGGDD PDOOW ", " WOOOGDGGGGGGGGDDDDPPDOOOW ", " WOOOODDGGGGPDDDD DDDDOOOW ", "  WOOOODDDDDDDDDDD PDOOOOW  ", "  WOOOOOODDDDDDDD OOOOOOW  ", "   WOOOOOODDDDDD OOOOOOW   ", "    WWWWWOOOOOOOOOWWWWW    ", "         OOOthtOOO         ", "         OOOthtOOO         ", "         OOOtdtOOO         ", "         OOOtdtOOO         ", "         OOOtdtOOO         ", "         OOOtdtOOO         ", "         OOOtdtOOO         ", "         WWWWWWWWW         ", "  WWWWWWWWWWWWWWWWWWWWWWWWWWWWW  ", " WWSSSSSSSSSSSSSSSSSSSSSSSSSWW ", "WWSSSSSSSSSSSSSSSSSSSSSSSSSSSww", "WWSSSSSSSSSSSSSSSSSSSSSSSSSSSww", "WWSSSSSSSSSSSSSSSSSSSSSSSSSSSww", " WWSSSSSSSSSSSSSSSSSSSSSSSSSWW ", "  WWWWWWWWWWWWWWWWWWWWWWWWWWW  " ]; const PIXEL_ART_TREE_PATTERN_HEIGHT_CHARS = DETAILED_TREE_PATTERN.length; const PIXEL_ART_TREE_PATTERN_WIDTH_CHARS = DETAILED_TREE_PATTERN[0].length; const ACTUAL_PIXEL_ART_TREE_WIDTH = PIXEL_ART_TREE_PATTERN_WIDTH_CHARS * PIXEL_ART_TREE_SCALE; const ACTUAL_PIXEL_ART_TREE_HEIGHT = PIXEL_ART_TREE_PATTERN_HEIGHT_CHARS * PIXEL_ART_TREE_SCALE; const TRUNK_IMG_CENTER_COL = 16; const TRUNK_IMG_HEIGHT_CHARS = 9; const TRUNK_IMG_BASE_ROW = 25; const TRUNK_IMG_CENTER_ROW = TRUNK_IMG_BASE_ROW - Math.floor(TRUNK_IMG_HEIGHT_CHARS / 2);
+        
+        const FIXED_SIZES = { 
+            wall: { width: 100, height: 20, color: '#7f8c8d', topColor: '#95a5a6' },
+            sideWall: { width: 20, height: 100, color: '#526b84', topColor: '#68809a' }, 
+            stone: { radius: ACTUAL_PIXEL_ART_ROCK_WIDTH / 2, visualHeight: ACTUAL_PIXEL_ART_ROCK_HEIGHT * 0.3 }, 
+            tree: { trunkCollisionWidth: 5 * PIXEL_ART_TREE_SCALE, trunkCollisionHeight: TRUNK_IMG_HEIGHT_CHARS * PIXEL_ART_TREE_SCALE, visualHeight: ACTUAL_PIXEL_ART_TREE_HEIGHT * 0.8 },
+            booster: { width: 60, height: 25, color: '#3498db', topColor: '#5dade2', arrowColor: '#ecf0f1' }
+        };
+
+        // --- d3 renk nesnesi ---
+        const d3 = {
+            color: function(colorStr) {
+                let r = 0, g = 0, b = 0;
+                if (colorStr.startsWith('#')) {
+                    if (colorStr.length == 4) {
+                        r = parseInt(colorStr[1] + colorStr[1], 16);
+                        g = parseInt(colorStr[2] + colorStr[2], 16);
+                        b = parseInt(colorStr[3] + colorStr[3], 16);
+                    } else if (colorStr.length == 7) {
+                        r = parseInt(colorStr[1] + colorStr[2], 16);
+                        g = parseInt(colorStr[3] + colorStr[4], 16);
+                        b = parseInt(colorStr[5] + colorStr[6], 16);
+                    }
+                } else if (colorStr.startsWith('rgb')) {
+                    const p = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+                    if (p) {
+                        r = parseInt(p[1]);
+                        g = parseInt(p[2]);
+                        b = parseInt(p[3]);
+                    }
+                }
+                return {
+                    darker: function(k = 1) {
+                        const f = Math.pow(0.7, k);
+                        return `rgb(${Math.max(0, Math.round(r * f))},${Math.max(0, Math.round(g * f))},${Math.max(0, Math.round(b * f))})`;
+                    },
+                    brighter: function(k = 1) {
+                        const f = 1 / Math.pow(0.7, k);
+                        return `rgb(${Math.min(255, Math.round(r * f))},${Math.min(255, Math.round(g * f))},${Math.min(255, Math.round(b * f))})`;
+                    },
+                    toString: function() {
+                        return `rgb(${r},${g},${b})`;
+                    }
+                }; // Closes the object returned by color()
+            } // Closes the color() function
+        }; // Closes the d3 object
+        // --- d3 renk nesnesi sonu ---
+
+        let audioCtx = null; let mousePos = { x: 0, y: 0, onCanvas: false }; const OBSTACLE_FLASH_DURATION = 150;
+
+        function initializeAudio() { if (!audioCtx && typeof AudioContext !== 'undefined') { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } }
+        function playSound(type) { if(!audioCtx)return;const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);g.gain.setValueAtTime(.1,audioCtx.currentTime); switch(type){case 'ball_hit_obstacle_stone':o.type='triangle';o.frequency.setValueAtTime(200,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.2);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.2);break;case 'ball_hit_obstacle_tree':o.type='sawtooth';o.frequency.setValueAtTime(160,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.25);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.25);break;case 'ball_hit_wall':o.type='square';o.frequency.setValueAtTime(130,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.15);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.15);break;case 'flipper_hit':o.type='sine';o.frequency.setValueAtTime(300,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(250,audioCtx.currentTime+.1);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.1);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.1);break;case 'ball_launch':o.type='sine';o.frequency.setValueAtTime(180,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(450,audioCtx.currentTime+.3);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.3);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.3);break;case 'ball_lost':o.type='sawtooth';o.frequency.setValueAtTime(90,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(40,audioCtx.currentTime+.5);g.gain.setValueAtTime(.18,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.5);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.5);break;case 'add_item':o.type='triangle';o.frequency.setValueAtTime(400,audioCtx.currentTime);g.gain.setValueAtTime(.04,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.1);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.1);break;case 'remove_item':o.type='sine';o.frequency.setValueAtTime(280,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(130,audioCtx.currentTime+.15);g.gain.setValueAtTime(.03,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.15);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.15);break;case 'no_money':o.type='square';o.frequency.setValueAtTime(90,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(70,audioCtx.currentTime+.2);g.gain.setValueAtTime(.07,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.2);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.2);break;case 'booster_hit':o.type='sine';o.frequency.setValueAtTime(350,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(700,audioCtx.currentTime+.15);g.gain.setValueAtTime(.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.15);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+.15);break;}}
+        
+        function loadGameData() {
+            try {
+                const sS = localStorage.getItem(HIGH_SCORE_KEY);
+                highScore = sS ? parseInt(sS) : 0;
+                const sM = localStorage.getItem(MONEY_KEY);
+                playerMoney = sM ? parseInt(sM) : INITIAL_MONEY; 
+                
+                const sL_raw = localStorage.getItem(LEVEL_KEY);
+                if (sL_raw !== null) {
+                    const parsedLevel = parseInt(sL_raw);
+                    if (Number.isInteger(parsedLevel) && parsedLevel >= 0 && parsedLevel < levels.length) {
+                        currentLevelIndex = parsedLevel;
+                    } else {
+                        console.warn(`localStorage'da geçersiz seviye indeksi '${sL_raw}' bulundu. 0'a sıfırlanıyor.`);
+                        currentLevelIndex = 0;
+                        localStorage.setItem(LEVEL_KEY, "0"); 
+                    }
+                } else {
+                    currentLevelIndex = 0; 
+                }
+
+            } catch (e) {
+                console.error("Oyun verileri localStorage'dan yüklenemedi:", e);
+                highScore = 0;
+                playerMoney = INITIAL_MONEY;
+                currentLevelIndex = 0;
+            }
+            updateScoreDisplay();
+        }
+        function saveGameData() {
+            try {
+                if (gameScore > highScore) {
+                    highScore = gameScore;
+                    localStorage.setItem(HIGH_SCORE_KEY, highScore.toString());
+                }
+                localStorage.setItem(MONEY_KEY, playerMoney.toString());
+                localStorage.setItem(LEVEL_KEY, currentLevelIndex.toString());
+            } catch (e) {
+                console.error("Oyun verileri localStorage'a kaydedilemedi:", e);
+            }
+            updateScoreDisplay(); 
+        }
+        function displayMessage(msg,dur=2800){tempMessageDiv.innerHTML=msg.replace(/\n/g,'<br>');tempMessageDiv.style.display='block';if(dur>0){setTimeout(()=>{tempMessageDiv.style.display='none';},dur);}}
+
+        function changeLevel(newLevelIndex) {
+            currentLevelIndex = newLevelIndex % levels.length;
+            const currentLevel = levels[currentLevelIndex]; 
+
+            if (!currentLevel || !currentLevel.type) {
+                console.error(`Hata: ${currentLevelIndex} indeksi için geçersiz seviye verisi. Varsayılan doğa arka planına geçiliyor.`);
+                drawStaticBackgroundToBuffer("nature"); 
+            } else {
+                drawStaticBackgroundToBuffer(currentLevel.type); 
+            }
+            
+            displayMessage(`Yeni Seviye: ${currentLevel.name || 'Bilinmeyen Seviye'}\n<small>${currentLevel.description || ''}</small>`, 3500);
+            updateInterface(); 
+            saveGameData(); 
+        }
+
+
+        function updateInterface() {
+            [toolWallButton, toolSideWallButton, toolStoneButton, toolTreeButton, toolBoosterButton, toolEraserButton].forEach(b => b.classList.remove('selected-tool'));
+            
+            toolWallButton.textContent = '🧱';
+            toolWallButton.title = `Duvar (${OBSTACLE_COSTS.wall})`;
+            toolWallButton.setAttribute('aria-label', `Duvar Yerleştirme Aracı (Maliyet: ${OBSTACLE_COSTS.wall})`);
+            toolSideWallButton.textContent = '❚';
+            toolSideWallButton.title = `Yan Duvar (${OBSTACLE_COSTS.sideWall})`;
+            toolSideWallButton.setAttribute('aria-label', `Yan Duvar Yerleştirme Aracı (Maliyet: ${OBSTACLE_COSTS.sideWall})`);
+            toolStoneButton.textContent = '🪨';
+            toolStoneButton.title = `Taş (${OBSTACLE_COSTS.stone})`;
+            toolStoneButton.setAttribute('aria-label', `Taş Yerleştirme Aracı (Maliyet: ${OBSTACLE_COSTS.stone})`);
+            toolTreeButton.textContent = '🌳';
+            toolTreeButton.title = `Ağaç (${OBSTACLE_COSTS.tree})`;
+            toolTreeButton.setAttribute('aria-label', `Ağaç Yerleştirme Aracı (Maliyet: ${OBSTACLE_COSTS.tree})`);
+            toolBoosterButton.textContent = '🚀'; 
+            toolBoosterButton.title = `Hızlandırıcı (${OBSTACLE_COSTS.booster})`; 
+            toolBoosterButton.setAttribute('aria-label', `Hızlandırıcı Yerleştirme Aracı (Maliyet: ${OBSTACLE_COSTS.booster})`); 
+            toolEraserButton.textContent = '⌫'; 
+            toolEraserButton.title = 'Silgi';
+            toolEraserButton.setAttribute('aria-label', `Silgi Aracı`);
+            clearObstaclesButton.textContent = '🗑️'; 
+            clearObstaclesButton.title = 'Tümünü Temizle';
+             clearObstaclesButton.setAttribute('aria-label', `Tüm Öğeleri Temizle`);
+            
+            if (currentMode === MODE_DESIGN) {
+                designControlsDiv.style.display = 'flex'; 
+                gameInfoDiv.style.display = 'block';
+                toolSpecificInstructionsP.style.display = 'block';
+                startGameButton.textContent = "Oyunu Başlat";
+                startGameButton.setAttribute('aria-label', "Oyunu Başlat");
+                canvas.style.cursor = 'copy';
+                generalModeInstructionsP.textContent = "Tasarım Modu: Aşağıdan bir araç seçin ve yerleştirmek için panoya tıklayın.";
+                let currentToolFullName = '';
+                if (currentTool === 'wall') { currentToolFullName = toolWallButton.title; toolWallButton.classList.add('selected-tool'); }
+                else if (currentTool === 'sideWall') { currentToolFullName = toolSideWallButton.title; toolSideWallButton.classList.add('selected-tool'); }
+                else if (currentTool === 'stone') { currentToolFullName = toolStoneButton.title; toolStoneButton.classList.add('selected-tool'); }
+                else if (currentTool === 'tree') { currentToolFullName = toolTreeButton.title; toolTreeButton.classList.add('selected-tool'); }
+                else if (currentTool === 'booster') { currentToolFullName = toolBoosterButton.title; toolBoosterButton.classList.add('selected-tool'); } 
+                else if (currentTool === 'eraser') { currentToolFullName = toolEraserButton.title; toolEraserButton.classList.add('selected-tool'); }
+                toolSpecificInstructionsP.textContent = `Seçilen Araç: ${currentToolFullName}`;
+                gameActive = false; 
+            }
+            else { // MODE_PLAY
+                designControlsDiv.style.display = 'none'; 
+                toolSpecificInstructionsP.style.display = 'none';
+                gameInfoDiv.style.display = 'block';
+                canvas.style.cursor = 'default';
+                if (gameActive) {
+                    startGameButton.textContent = "Tasarıma Dön";
+                    startGameButton.setAttribute('aria-label', "Tasarım Moduna Dön");
+                    generalModeInstructionsP.textContent = "Flipperlar topu kurtarmak için otomatik çalışıyor!";
+                } else if (ballsLeft > 0) {
+                    startGameButton.textContent = "Topu Fırlat";
+                    startGameButton.setAttribute('aria-label', "Topu Fırlat");
+                    generalModeInstructionsP.textContent = "Oynamaya başlamak için 'Topu Fırlat' düğmesine basın.";
+                } else { 
+                    startGameButton.textContent = "Tasarıma Dön"; 
+                    startGameButton.setAttribute('aria-label', "Tasarım Moduna Dön");
+                    generalModeInstructionsP.textContent = "Oyun bitti! Tasarım moduna dönmek için tıklayın veya yeniden başlayın.";
+                }
+            }
+            updateScoreDisplay(); 
+            if (currentLevelP) {
+                const levelData = levels[currentLevelIndex];
+                 if (levelData) { 
+                    currentLevelP.innerHTML = `${levelData.icon || '🏞️'} ${levelData.name || 'Bilinmeyen Seviye'}`;
+                } else {
+                    currentLevelP.innerHTML = `🏞️ Bilinmeyen Seviye`; 
+                }
+            }
+            gameStatusP.textContent = "";
+        }
+        
+        function drawDesertBackground(lC, bW, bH) { lC.save(); const skyGrad = lC.createLinearGradient(0, 0, 0, bH * 0.6); skyGrad.addColorStop(0, '#F0E68C'); skyGrad.addColorStop(1, '#FFDAB9'); lC.fillStyle = skyGrad; lC.fillRect(0, 0, bW, bH * 0.6); lC.fillStyle = '#FFA500'; lC.beginPath(); lC.arc(bW * 0.15, bH * 0.15, bW * 0.08, 0, Math.PI * 2); lC.fill(); lC.fillStyle = 'rgba(255, 222, 173, 0.6)'; lC.beginPath(); lC.arc(bW * 0.15, bH * 0.15, bW * 0.12, 0, Math.PI * 2); lC.fill(); lC.fillStyle = '#D2B48C'; lC.beginPath(); lC.moveTo(0, bH * 0.55); lC.bezierCurveTo(bW * 0.2, bH * 0.45, bW * 0.35, bH * 0.65, bW * 0.5, bH * 0.6); lC.bezierCurveTo(bW * 0.7, bH * 0.50, bW * 0.8, bH * 0.7, bW, bH * 0.65); lC.lineTo(bW, bH); lC.lineTo(0, bH); lC.closePath(); lC.fill(); lC.fillStyle = '#B8860B'; lC.beginPath(); lC.moveTo(bW * 0.05, bH * 0.58); lC.bezierCurveTo(bW * 0.25, bH * 0.52, bW * 0.38, bH * 0.68, bW * 0.55, bH * 0.63); lC.bezierCurveTo(bW * 0.75, bH * 0.55, bW * 0.85, bH * 0.73, bW, bH * 0.68); lC.lineTo(bW, bH); lC.lineTo(0, bH); lC.lineTo(0, bH * 0.6); lC.closePath(); lC.fill(); lC.fillStyle = '#EECFA1'; lC.beginPath(); lC.moveTo(0, bH * 0.6); lC.quadraticCurveTo(bW * 0.15, bH * 0.57, bW * 0.3, bH * 0.61); lC.quadraticCurveTo(bW * 0.5, bH * 0.55, bW * 0.7, bH * 0.62); lC.quadraticCurveTo(bW * 0.85, bH * 0.58, bW, bH * 0.60); lC.lineTo(bW, bH); lC.lineTo(0, bH); lC.closePath(); lC.fill(); function drawCactus(x, y, scale) { lC.fillStyle = '#556B2F'; lC.fillRect(x - 4 * scale, y - 25 * scale, 8 * scale, 50 * scale); lC.beginPath(); lC.moveTo(x + 4 * scale, y - 8 * scale); lC.quadraticCurveTo(x + 15 * scale, y - 20 * scale, x + 15 * scale, y - 5 * scale); lC.lineTo(x + 15*scale, y + 3*scale); lC.quadraticCurveTo(x + 12*scale, y-10*scale, x+4*scale, y-3*scale); lC.fill(); lC.beginPath(); lC.moveTo(x - 4 * scale, y - 5 * scale); lC.quadraticCurveTo(x - 20 * scale, y - 18 * scale, x - 18 * scale, y ); lC.lineTo(x-18*scale, y+8*scale); lC.quadraticCurveTo(x - 13*scale, y-8*scale, x-4*scale, y); lC.fill(); } drawCactus(bW * 0.25, bH * 0.82, 1.1); drawCactus(bW * 0.80, bH * 0.88, 0.8); drawCactus(bW * 0.55, bH * 0.92, 0.6); lC.restore(); }
+        function drawSpaceBackground(lC, bW, bH) { lC.save(); const spaceGrad = lC.createRadialGradient(bW/2, bH/2, 0, bW/2, bH/2, Math.max(bW,bH)/1.5); spaceGrad.addColorStop(0, '#000020'); spaceGrad.addColorStop(1, '#000000'); lC.fillStyle = spaceGrad; lC.fillRect(0, 0, bW, bH); for (let i = 0; i < 300; i++) { const x = Math.random() * bW; const y = Math.random() * bH; const radius = Math.random() * 1.8 + 0.2; const alpha = Math.random() * 0.6 + 0.4; lC.fillStyle = `rgba(255, 255, 230, ${alpha})`; lC.beginPath(); lC.arc(x, y, radius, 0, Math.PI * 2); lC.fill(); } const p1x = bW * 0.22; const p1y = bH * 0.28; const p1r = bW * 0.09; const p1Grad = lC.createRadialGradient(p1x - p1r*0.3, p1y - p1r*0.3, p1r*0.1, p1x, p1y, p1r); p1Grad.addColorStop(0, '#7A96A4'); p1Grad.addColorStop(1, '#3E505A'); lC.fillStyle = p1Grad; lC.beginPath(); lC.arc(p1x, p1y, p1r, 0, Math.PI * 2); lC.fill(); const planet2X = bW * 0.78; const planet2Y = bH * 0.65; const planet2R = bW * 0.07; const p2Grad = lC.createRadialGradient(planet2X + planet2R*0.2, planet2Y - planet2R*0.2, planet2R*0.1, planet2X, planet2Y, planet2R); p2Grad.addColorStop(0, '#E0B070'); p2Grad.addColorStop(1, '#A07040'); lC.fillStyle = p2Grad; lC.beginPath(); lC.arc(planet2X, planet2Y, planet2R, 0, Math.PI * 2); lC.fill(); lC.strokeStyle = 'rgba(224, 192, 160, 0.7)'; lC.lineWidth = 10; lC.beginPath(); lC.ellipse(planet2X, planet2Y, planet2R * 1.9, planet2R * 0.6, Math.PI / 7, 0, Math.PI * 2); lC.stroke(); lC.strokeStyle = 'rgba(176, 144, 112, 0.5)'; lC.lineWidth = 6; lC.beginPath(); lC.ellipse(planet2X, planet2Y, planet2R * 1.6, planet2R * 0.45, Math.PI / 7, 0, Math.PI * 2); lC.stroke(); lC.globalAlpha = 0.2; lC.fillStyle = '#B000B0'; lC.beginPath(); lC.ellipse(bW * 0.4, bH * 0.55, bW * 0.35, bH * 0.25, -Math.PI/5, 0, Math.PI * 2); lC.fill(); lC.fillStyle = '#0080FF'; lC.beginPath(); lC.ellipse(bW * 0.65, bH * 0.3, bW * 0.28, bH * 0.18, Math.PI/6, 0, Math.PI * 2); lC.fill(); lC.globalAlpha = 1.0; lC.restore(); }
+        function drawBeachBackground(lC, bW, bH) { lC.save(); const skyGrad = lC.createLinearGradient(0, 0, 0, bH * 0.65); skyGrad.addColorStop(0, '#FF6347'); skyGrad.addColorStop(0.25, '#FFA07A'); skyGrad.addColorStop(0.5, '#FFD700'); skyGrad.addColorStop(0.7, '#ADD8E6'); lC.fillStyle = skyGrad; lC.fillRect(0, 0, bW, bH * 0.65); lC.fillStyle = '#FFFFE0'; lC.beginPath(); lC.arc(bW * 0.25, bH * 0.58, bW * 0.07, 0, Math.PI * 2); lC.fill(); lC.fillStyle = 'rgba(255, 255, 224, 0.4)'; lC.beginPath(); lC.arc(bW * 0.25, bH * 0.58, bW * 0.11, 0, Math.PI * 2); lC.fill(); const waterGrad = lC.createLinearGradient(0, bH * 0.6, 0, bH * 0.85); waterGrad.addColorStop(0, '#4169E1'); waterGrad.addColorStop(0.5, '#1E90FF'); waterGrad.addColorStop(1, '#00BFFF'); lC.fillStyle = waterGrad; lC.fillRect(0, bH * 0.6, bW, bH * 0.25); lC.fillStyle = 'rgba(255, 255, 224, 0.3)'; lC.beginPath(); lC.ellipse(bW * 0.25, bH * 0.61, bW*0.05, bH*0.02, 0, 0, Math.PI*2); lC.fill(); lC.beginPath(); lC.ellipse(bW * 0.25, bH * 0.64, bW*0.08, bH*0.025, 0, 0, Math.PI*2); lC.fill(); lC.strokeStyle = 'rgba(240, 248, 255, 0.6)'; lC.lineWidth = 2.5; for (let i = 0; i < 6; i++) { const y = bH * 0.61 + i * 18 + Math.random() * 8; lC.beginPath(); lC.moveTo(0, y); for (let x = 0; x < bW; x += (30 + Math.random()*20)) { lC.quadraticCurveTo(x + (15+Math.random()*10), y - (3 + Math.random()*4), x + (30+Math.random()*20), y); } lC.stroke(); } lC.fillStyle = '#F4A460'; lC.beginPath(); lC.moveTo(0, bH*0.8); lC.quadraticCurveTo(bW*0.5, bH*0.78, bW, bH*0.82); lC.lineTo(bW, bH); lC.lineTo(0, bH); lC.closePath(); lC.fill(); lC.fillStyle = '#D2B48C'; for(let i=0; i < 600; i++) { lC.beginPath(); lC.arc(Math.random() * bW, bH * 0.8 + Math.random() * (bH*0.2), Math.random()*1.2 + 0.5, 0, Math.PI*2); lC.fill(); } function drawPalmTree(x, y, scale) { lC.fillStyle = '#8B4513'; lC.beginPath(); lC.moveTo(x - 4 * scale, y); lC.bezierCurveTo(x - 2*scale, y - 30*scale, x + 2*scale, y - 50*scale, x, y - 70*scale); lC.bezierCurveTo(x + 3*scale, y - 50*scale, x - 1*scale, y - 30*scale, x + 5 * scale, y); lC.closePath(); lC.fill(); lC.fillStyle = '#2E8B57'; const leafAngles = [-0.8, -0.4, 0, 0.4, 0.8, 1.2, -1.2]; const topX = x; const topY = y - 70 * scale; leafAngles.forEach(angle => { lC.beginPath(); lC.moveTo(topX, topY); lC.ellipse(topX, topY, 40 * scale, 15 * scale, Math.PI/2 + angle, -Math.PI/2.5, Math.PI/2.5); lC.closePath(); lC.fill(); }); } drawPalmTree(bW * 0.75, bH * 0.92, 0.9); drawPalmTree(bW * 0.15, bH * 0.95, 0.7); lC.restore(); }
+        function drawStaticBackgroundToBuffer(levelType = "nature") {
+            const lC = bgCtx; const bW = backgroundCanvas.width; const bH = backgroundCanvas.height; lC.clearRect(0, 0, bW, bH); if (levelType === "nature") { const bG = '#2a5b23';const lPG = '#79b85c';const sG = '#1e4219';const bCD = '#101f0d';const bCM = '#193013';lC.save();lC.fillStyle = bG;lC.fillRect(0, 0, bW, bH);lC.globalAlpha = .35;lC.fillStyle = lPG;lC.beginPath();lC.moveTo(0, bH * .05);lC.bezierCurveTo(bW * .15, -bH * .1, bW * .55, -bH * .05, bW * .65, bH * .25);lC.bezierCurveTo(bW * .75, bH * .6, bW * .3, bH * .65, 0, bH * .45);lC.closePath();lC.fill();lC.beginPath();lC.moveTo(bW * .6, bH * .05);lC.bezierCurveTo(bW * .9, -bH * .05, bW, bH * .25, bW, bH * .45);lC.bezierCurveTo(bW * .95, bH * .65, bW * .7, bH * .55, bW * .6, bH * .05);lC.closePath();lC.fill();lC.globalAlpha = 1;lC.globalAlpha = .4;lC.fillStyle = sG;lC.beginPath();lC.moveTo(bW * .35, bH);lC.lineTo(bW, bH);lC.lineTo(bW, bH * .25);lC.bezierCurveTo(bW * .9, bH * .35, bW * .55, bH * .65, bW * .35, bH);lC.closePath();lC.fill();lC.strokeStyle = sG;lC.lineWidth = Math.min(bW, bH) * .06;lC.globalAlpha = .15;lC.beginPath();lC.moveTo(-bW * .05, bH * .55);lC.bezierCurveTo(bW * .2, bH * .48, bW * .4, bH * .62, bW * .6, bH * .53);lC.bezierCurveTo(bW * .8, bH * .45, bW * 1.05, bH * .68, bW * 1.05, bH * .63);lC.stroke();lC.beginPath();lC.moveTo(-bW * .05, bH * .8);lC.bezierCurveTo(bW * .25, bH * .85, bW * .5, bH * .68, bW * .75, bH * .78);lC.bezierCurveTo(bW * .9, bH * .83, bW * 1.05, bH * .65, bW * 1.05, bH * .68);lC.stroke();lC.globalAlpha = 1;lC.lineWidth = 1;function dGT(cx, cy, nb, ah, hv, sp, bc, hc) {for (let i = 0; i < nb; i++) {const bh = ah + (Math.random() - .5) * hv * 2;const bw = 1.5 + Math.random() * 2;const ang = Math.random() * Math.PI * 2;const rad = Math.random() * sp * (.3 + Math.random() * .7);const bx = cx + Math.cos(ang) * rad;const by = cy + Math.sin(ang) * rad * .3;const col = Math.random() < .35 ? hc : bc;lC.fillStyle = col;lC.beginPath();lC.moveTo(bx - bw / 2, by);lC.lineTo(bx + bw / 2, by);lC.lineTo(bx + (Math.random() - .5) * bw * .5, by - bh);lC.closePath();lC.fill();}}const ts = [{ x: .1, y: .12, n: 25, h: 18, hv: 10, s: 30, c1: bCD, c2: bCM }, { x: .08, y: .25, n: 20, h: 15, hv: 8, s: 25, c1: bCD, c2: bCM }, { x: .25, y: .30, n: 40, h: 22, hv: 12, s: 45, c1: bCD, c2: bCM }, { x: .45, y: .50, n: 50, h: 20, hv: 10, s: 60, c1: bCD, c2: bCM }, { x: .55, y: .52, n: 40, h: 18, hv: 9, s: 55, c1: bCD, c2: bCM }, { x: .75, y: .28, n: 30, h: 18, hv: 9, s: 35, c1: bCD, c2: bCM }, { x: .82, y: .32, n: 22, h: 16, hv: 7, s: 30, c1: bCD, c2: bCM }, { x: .70, y: .65, n: 55, h: 28, hv: 14, s: 50, c1: bCD, c2: bCM }, { x: .85, y: .75, n: 60, h: 33, hv: 16, s: 55, c1: bCD, c2: bCM }, { x: .15, y: .85, n: 25, h: 20, hv: 10, s: 35, c1: bCD, c2: bCM }, { x: .5, y: .9, n: 20, h: 18, hv: 9, s: 40, c1: bCD, c2: bCM }, { x: .35, y: .15, n: 15, h: 12, hv: 6, s: 20, c1: bCD, c2: bCM }, { x: .65, y: .40, n: 18, h: 14, hv: 7, s: 25, c1: bCD, c2: bCM }, { x: .30, y: .70, n: 20, h: 16, hv: 8, s: 30, c1: bCD, c2: bCM }, { x: .90, y: .55, n: 25, h: 20, hv: 10, s: 30, c1: bCD, c2: bCM },];ts.forEach(t => {dGT(bW * t.x, bH * t.y, t.n, t.h, t.hv, t.s, t.c1, t.c2);});const nFB = (bW * bH) / 180;lC.globalAlpha = .5;for (let i = 0; i < nFB; i++) {const x = Math.random() * bW;const y = Math.random() * bH;const h = 2 + Math.random() * 5;const w = 1 + Math.random();const col = Math.random() < .65 ? bCD : bCM;lC.fillStyle = col;lC.fillRect(x - w / 2, y - h, w, h);}lC.globalAlpha = 1;const oG = lC.createLinearGradient(0, 0, 0, bH);oG.addColorStop(0, "rgba(255,255,255,0.03)");oG.addColorStop(.7, "rgba(0,0,0,0.0)");oG.addColorStop(1, "rgba(0,0,0,0.08)");lC.fillStyle = oG;lC.fillRect(0, 0, bW, bH);lC.restore(); } else if (levelType === "desert") { drawDesertBackground(lC, bW, bH); } else if (levelType === "space") { drawSpaceBackground(lC, bW, bH); } else if (levelType === "beach") { drawBeachBackground(lC, bW, bH); } else {  
+            console.warn(`Unknown levelType "${levelType}" for background. Defaulting to nature.`);
+            drawStaticBackgroundToBuffer("nature"); 
+            return; 
+        }
+        const vignetteGrad = lC.createRadialGradient(bW / 2, bH / 2, Math.min(bW, bH) * 0.25, bW / 2, bH / 2, Math.max(bW, bH) * 0.75); vignetteGrad.addColorStop(0, 'rgba(0,0,0,0)'); vignetteGrad.addColorStop(1, 'rgba(0,0,0,0.15)'); lC.fillStyle = vignetteGrad; lC.fillRect(0, 0, bW, bH); 
+        }
+
+        function drawCanvasBackground(){ctx.drawImage(backgroundCanvas,0,0,canvas.width,canvas.height);}
+        function drawObjectShadow(x,y,bW,bH,vOH){const sC=`rgba(0,0,0,0.2)`;const sW=bW*.8;const sHF=bH>bW*.5?.2:.3;const sH=Math.max(5,bH*sHF);let sDY=y;if(vOH>0){sDY+=vOH*.1+bH*.05;}else{sDY+=bH*.1;}ctx.fillStyle=sC;ctx.beginPath();ctx.ellipse(x,sDY,sW/2,sH/2,0,0,Math.PI*2);ctx.fill();}
+        
+        /**
+ * Görsel efektler için parçacıklar oluştur
+ * @param {number} x - Parçacıkların merkezi için x koordinatı
+ * @param {number} y - Parçacıkların merkezi için y koordinatı
+ * @param {number} count - Oluşturulacak parçacık sayısı
+ * @param {string} baseColor - Parçacıkların temel rengi
+ * @param {number} magnitude - Parçacıkların yayılma kuvveti
+ * @param {boolean} gravity - Parçacıklar yerçekiminden etkilensin mi
+ */
+function createParticles(x, y, count, baseColor, magnitude = 3, gravity = true) {
+    // Zaten çok fazla parçacık olmadığından emin olun (performans için)
+    const maxParticles = 300;
+    if (particles.length > maxParticles) {
+        // Çok fazla varsa eski parçacıkları kaldır
+        particles.splice(0, particles.length - maxParticles + count);
+    }
+    
+    // Temel rengin RGB bileşenlerini al
+    let r = 255, g = 255, b = 255;
+    if (baseColor.startsWith('#')) {
+        if (baseColor.length === 4) {
+            r = parseInt(baseColor[1] + baseColor[1], 16);
+            g = parseInt(baseColor[2] + baseColor[2], 16);
+            b = parseInt(baseColor[3] + baseColor[3], 16);
+        } else if (baseColor.length === 7) {
+            r = parseInt(baseColor.substring(1, 3), 16);
+            g = parseInt(baseColor.substring(3, 5), 16);
+            b = parseInt(baseColor.substring(5, 7), 16);
+        }
+    }
+    
+    // Parçacıkları oluştur
+    for (let i = 0; i < count; i++) {
+        // Her parçacık için rengi biraz çeşitlendir
+        const colorVariation = 30;
+        const rVar = Math.min(255, Math.max(0, r + Math.floor((Math.random() - 0.5) * colorVariation)));
+        const gVar = Math.min(255, Math.max(0, g + Math.floor((Math.random() - 0.5) * colorVariation)));
+        const bVar = Math.min(255, Math.max(0, b + Math.floor((Math.random() - 0.5) * colorVariation)));
+        const particleColor = `rgb(${rVar}, ${gVar}, ${bVar})`;
+        
+        // Rastgele özelliklerle parçacığı ekle
+        particles.push({
+            x: x + (Math.random() - 0.5) * 5, // Başlangıç konumuna biraz rastgelelik ekle
+            y: y + (Math.random() - 0.5) * 5,
+            dx: (Math.random() - 0.5) * magnitude * 2,
+            dy: (Math.random() - 0.5) * magnitude * 2 - (gravity ? Math.random() * magnitude : 0),
+            life: Math.random() * 40 + 20,
+            color: particleColor,
+            size: Math.random() * 3 + 2,
+            alpha: 1,
+            gravity: gravity ? 0.05 + Math.random() * 0.05 : 0, // Parçacık için yerçekimi değeri
+            rotation: Math.random() * Math.PI * 2, // Rastgele dönüş açısı
+            rotationSpeed: (Math.random() - 0.5) * 0.2, // Rastgele dönüş hızı
+            shape: Math.random() > 0.7 ? 'circle' : 'square' // Rastgele şekil
+        });
+    }
+}
+        /**
+         * Her karede parçacıkların durumunu güncelle
+         */
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                // Konumu güncelle
+                p.x += p.dx;
+                p.y += p.dy;
+                
+                // Belirtilmişse parçacığa özel yerçekimini uygula
+                if (p.gravity !== undefined) {
+                    p.dy += p.gravity;
+                } else {
+                    p.dy += GRAVITY * 0.2; // Uyumluluk için eski davranış
+                }
+                
+                // Parçacıkları kademeli olarak yavaşlatmak için sürtünme uygula
+                p.dx *= 0.98;
+                p.dy *= 0.98;
+                
+                // Belirtilmişse dönüşü güncelle
+                if (p.rotation !== undefined && p.rotationSpeed !== undefined) {
+                    p.rotation += p.rotationSpeed;
+                }
+                
+                // Parçacığın ömrünü azalt ve şeffaflığı güncelle
+                p.life--;
+                p.alpha = Math.max(0, p.life / 40);
+                
+                // Zaman geçtikçe parçacığın boyutunu yavaşça azalt
+                if (p.life < 15) {
+                    p.size *= 0.95;
+                }
+
+                // Ölü parçacıkları veya ekrandan çıkanları kaldır
+                if (p.life <= 0 || 
+                    p.x < -50 || p.x > canvas.width + 50 || 
+                    p.y < -50 || p.y > canvas.height + 50) {
+                    particles.splice(i, 1);
+                }
+            }
+        }
+        /**
+         * Parçacıkları ekrana çiz
+         */
+        function drawParticles() {
+            // Mevcut çizim ayarlarını kaydet
+            const prevSmoothingEnabled = ctx.imageSmoothingEnabled;
+            const prevLineWidth = ctx.lineWidth;
+            const prevGlobalAlpha = ctx.globalAlpha;
+            
+            // Daha pürüzsüz parçacıklar için görüntü düzleştirmeyi etkinleştir
+            ctx.imageSmoothingEnabled = true;
+            ctx.lineWidth = 1;
+            
+            // Her parçacığı çiz
+            particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                
+                // Dönüşü uygulamak için çizim durumunu kaydet
+                ctx.save();
+                
+                // Belirtilmişse dönüşü uygula
+                if (p.rotation !== undefined) {
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.translate(-p.x, -p.y);
+                }
+                
+                // Parçacığı şekline göre çiz
+                if (p.shape === 'square') {
+                    // Kare çiz
+                    const halfSize = p.size * 0.8;
+                    ctx.beginPath();
+                    ctx.rect(p.x - halfSize, p.y - halfSize, halfSize * 2, halfSize * 2);
+                    ctx.fill();
+                    
+                    // Hafif parlama efekti ekle
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.rect(p.x - halfSize * 0.5, p.y - halfSize * 0.5, halfSize, halfSize);
+                    ctx.fill();
+                } else {
+                    // Daire çiz (varsayılan şekil)
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Hafif parlama efekti ekle
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(p.x - p.size * 0.3, p.y - p.size * 0.3, p.size * 0.4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Çizim durumunu geri yükle
+                ctx.restore();
+            });
+            
+            // Orijinal çizim ayarlarını geri yükle
+            ctx.globalAlpha = prevGlobalAlpha;
+            ctx.imageSmoothingEnabled = prevSmoothingEnabled;
+            ctx.lineWidth = prevLineWidth;
+        }
+
+        function drawBall(){
+            if(!ball.isMoving && !gameActive && currentMode === MODE_DESIGN) return;
+            drawObjectShadow(ball.x,ball.y,ball.radius*2,ball.radius*.8,0);
+            const pS=ctx.imageSmoothingEnabled;ctx.imageSmoothingEnabled=true;
+            const g=ctx.createRadialGradient(ball.x-ball.radius*.35,ball.y-ball.radius*.35,ball.radius*.1,ball.x,ball.y,ball.radius);
+            g.addColorStop(0,ball.highlightColor);g.addColorStop(.7,ball.color);g.addColorStop(1,d3.color(ball.color).darker(.3).toString());
+            ctx.fillStyle=g;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.radius,0,Math.PI*2);ctx.fill();
+            ctx.imageSmoothingEnabled=pS;
+        }
+        function drawDrainShape(){const dHY=drain.y+drain.visualBaseYOffset;const vR=drain.radius*1.15;const oRR=vR+7;const pS=ctx.imageSmoothingEnabled;ctx.imageSmoothingEnabled=true;let gCAH='#1f2e3d';try{gCAH=getComputedStyle(canvasWrapper).backgroundColor;gCAH=d3.color(gCAH).darker(.3).toString();}catch(e){}ctx.fillStyle=gCAH;ctx.beginPath();ctx.arc(drain.x,dHY,oRR+3,0,Math.PI*2);ctx.fill();ctx.fillStyle=drain.rimColor;ctx.beginPath();ctx.arc(drain.x,dHY,oRR,0,Math.PI*2,false);ctx.arc(drain.x,dHY,vR,0,Math.PI*2,true);ctx.fill();ctx.fillStyle=drain.colorInner;ctx.beginPath();ctx.arc(drain.x,dHY,vR,0,Math.PI*2);ctx.fill();ctx.imageSmoothingEnabled=pS;}
+        function drawFlipper(f){ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);const hW=f.width/2;const grad=ctx.createLinearGradient(-f.length/2,0,f.length/2,0);grad.addColorStop(0,d3.color(f.color).brighter(0.3).toString());grad.addColorStop(0.5,f.color);grad.addColorStop(1,d3.color(f.color).darker(0.3).toString());ctx.fillStyle=grad;ctx.beginPath();ctx.moveTo(-f.length/2+hW,-hW);ctx.lineTo(f.length/2-hW,-hW);ctx.arc(f.length/2-hW,0,hW,-Math.PI/2,Math.PI/2);ctx.lineTo(-f.length/2+hW,hW);ctx.arc(-f.length/2+hW,0,hW,Math.PI/2,-Math.PI/2);ctx.closePath();ctx.fill();ctx.strokeStyle=d3.color(FLIPPER_HIGHLIGHT_COLOR).darker(0.5).toString();ctx.lineWidth=1.5;ctx.stroke();ctx.restore();}
+        function drawWall(w,isP=false){const wW=w.width;const wH=w.height;const dX=w.x;const dY=w.y;if(isP){ctx.globalAlpha=.5;}else{drawObjectShadow(dX+wW/2,dY+wH/2,wW,wH,0);}const pS=ctx.imageSmoothingEnabled;ctx.imageSmoothingEnabled=true;const mainColor=w.color||FIXED_SIZES.wall.color;const topColor=w.topColor||FIXED_SIZES.wall.topColor;const grad=ctx.createLinearGradient(dX,dY,dX,dY+wH);grad.addColorStop(0,topColor);grad.addColorStop(0.3,mainColor);grad.addColorStop(1,d3.color(mainColor).darker(0.3).toString());ctx.fillStyle=grad;ctx.fillRect(dX,dY,wW,wH);const bH=9;const bW=19;ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=.8;for(let r=1;r*bH<wH;r++){ctx.beginPath();ctx.moveTo(dX,dY+r*bH);ctx.lineTo(dX+wW,dY+r*bH);ctx.stroke();}for(let r=0;(r+1)*bH<=wH+.1;r++){for(let c=0;c*bW<wW;c++){let offset=(r%2===0)?0:bW/2;if(c*bW+offset<wW-bW*.05){ctx.beginPath();ctx.moveTo(dX+c*bW+offset,dY+r*bH);ctx.lineTo(dX+c*bW+offset,dY+(r+1)*bH);ctx.stroke();}}}ctx.imageSmoothingEnabled=pS;if(isP)ctx.globalAlpha=1;}
+        
+        function drawBooster(b, isP = false) { 
+            const bW = b.width; const bH = b.height; const dX = b.x; const dY = b.y;
+            if (isP) { ctx.globalAlpha = .5; } else { drawObjectShadow(dX + bW / 2, dY + bH / 2, bW, bH, 0); }
+            
+            const pS = ctx.imageSmoothingEnabled; ctx.imageSmoothingEnabled = true;
+            const mainColor = b.color || FIXED_SIZES.booster.color;
+            const topColor = b.topColor || FIXED_SIZES.booster.topColor;
+            const arrowColor = b.arrowColor || FIXED_SIZES.booster.arrowColor;
+
+            const grad = ctx.createLinearGradient(dX, dY, dX, dY + bH);
+            grad.addColorStop(0, topColor);
+            grad.addColorStop(0.3, mainColor);
+            grad.addColorStop(1, d3.color(mainColor).darker(0.3).toString());
+            ctx.fillStyle = grad;
+            ctx.fillRect(dX, dY, bW, bH);
+
+            ctx.fillStyle = arrowColor;
+            const arrowMargin = bH * 0.2;
+            const arrowTipY = dY + arrowMargin;
+            const arrowBaseY = dY + bH - arrowMargin;
+            const arrowWidth = bW * 0.4;
+            const arrowHeadHeight = bH * 0.3;
+
+            ctx.beginPath();
+            ctx.moveTo(dX + bW / 2, arrowTipY); 
+            ctx.lineTo(dX + bW / 2 + arrowWidth / 2, arrowTipY + arrowHeadHeight);
+            ctx.lineTo(dX + bW / 2 + arrowWidth / 4, arrowTipY + arrowHeadHeight);
+            ctx.lineTo(dX + bW / 2 + arrowWidth / 4, arrowBaseY);
+            ctx.lineTo(dX + bW / 2 - arrowWidth / 4, arrowBaseY);
+            ctx.lineTo(dX + bW / 2 - arrowWidth / 4, arrowTipY + arrowHeadHeight);
+            ctx.lineTo(dX + bW / 2 - arrowWidth / 2, arrowTipY + arrowHeadHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.strokeStyle = d3.color(mainColor).darker(0.5).toString();
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(dX, dY, bW, bH);
+
+            ctx.imageSmoothingEnabled = pS;
+            if (isP) ctx.globalAlpha = 1;
+        }
+
+        function drawPixelArtPattern(c,sX,sY,bS,p,cls,isF=false){const eS=bS;const pS=c.imageSmoothingEnabled;c.imageSmoothingEnabled=false;p.forEach((rS,y_p)=>{for(let x_p=0;x_p<rS.length;x_p++){const ch=rS[x_p];let clr=cls[ch];if(clr&&clr!=='transparent'){if(isF){clr=d3.color(clr).brighter(1.5).toString();}c.fillStyle=clr;c.fillRect(sX+x_p*eS,sY+y_p*eS,eS,eS);}}});c.imageSmoothingEnabled=pS;}
+        function drawStoneAsBumper(s,isP=false){const sW=ACTUAL_PIXEL_ART_ROCK_WIDTH;const sH=ACTUAL_PIXEL_ART_ROCK_HEIGHT;const dTX=s.x-sW/2;const dTY=s.y-sH/2;const isF=s.lastHitTime&&(Date.now()-s.lastHitTime<OBSTACLE_FLASH_DURATION);if(isP){ctx.globalAlpha=.5;}else{drawObjectShadow(s.x,s.y,sW,sH*.3,FIXED_SIZES.stone.visualHeight);}drawPixelArtPattern(ctx,dTX,dTY,PIXEL_ART_ROCK_SCALE,DETAILED_ROCK_PATTERN,PIXEL_ART_ROCK_COLOR_MAP,isF);if(isP)ctx.globalAlpha=1;}
+        function drawTreeAsBumper(t,isP=false){const dTX=t.x-(TRUNK_IMG_CENTER_COL*PIXEL_ART_TREE_SCALE);const dTY=t.y-(TRUNK_IMG_CENTER_ROW*PIXEL_ART_TREE_SCALE);const sBW=FIXED_SIZES.tree.trunkCollisionWidth*2;const isF=t.lastHitTime&&(Date.now()-t.lastHitTime<OBSTACLE_FLASH_DURATION);if(isP){ctx.globalAlpha=.5;}else{drawObjectShadow(t.x,t.y+FIXED_SIZES.tree.trunkCollisionHeight/2-FIXED_SIZES.tree.visualHeight*.1,sBW,sBW*.4,FIXED_SIZES.tree.visualHeight);}drawPixelArtPattern(ctx,dTX,dTY,PIXEL_ART_TREE_SCALE,DETAILED_TREE_PATTERN,PIXEL_ART_TREE_COLOR_MAP,isF);if(isP)ctx.globalAlpha=1;}
+        
+        function drawDesignPreview(){
+            if(currentMode!==MODE_DESIGN||!mousePos.onCanvas||currentTool==='eraser')return;
+            const fS=FIXED_SIZES[currentTool];
+            if(!fS)return;
+            if(currentTool==='wall' || currentTool === 'sideWall'){
+                drawWall({type:currentTool, x:mousePos.x-fS.width/2,y:mousePos.y-fS.height/2,width:fS.width,height:fS.height,color:fS.color,topColor:fS.topColor},true);
+            } else if(currentTool==='stone'){
+                drawStoneAsBumper({type:'stone',x:mousePos.x,y:mousePos.y,radius:fS.radius},true);
+            } else if(currentTool==='tree'){
+                drawTreeAsBumper({type:'tree',x:mousePos.x,y:mousePos.y},true);
+            } else if (currentTool === 'booster') { 
+                drawBooster({type:'booster', x:mousePos.x-fS.width/2, y:mousePos.y-fS.height/2, width:fS.width, height:fS.height, color:fS.color, topColor:fS.topColor, arrowColor:fS.arrowColor}, true);
+            }
+        }
+
+        function drawDesignGrid() { 
+            if (currentMode !== MODE_DESIGN) return;
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < canvas.width; x += DESIGN_GRID_SPACING) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += DESIGN_GRID_SPACING) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function updateFlippers() {
+            // Sol flipper'ı güncelle
+            if (leftFlipper.angle !== leftFlipper.targetAngle) {
+                // Eğer hedef açı mevcut açıdan büyükse, açıyı artır
+                if (leftFlipper.targetAngle > leftFlipper.angle) {
+                    leftFlipper.angle = Math.min(leftFlipper.targetAngle, leftFlipper.angle + FLIPPER_SPEED);
+                } 
+                // Eğer hedef açı mevcut açıdan küçükse, açıyı azalt
+                else {
+                    leftFlipper.angle = Math.max(leftFlipper.targetAngle, leftFlipper.angle - FLIPPER_SPEED);
+                }
+                
+                // Flipper aktifse ve hareketin başındaysa ses çal
+                if (leftFlipper.active && 
+                    ((leftFlipper.targetAngle === FLIPPER_ACTIVE_ANGLE_LEFT && Math.abs(leftFlipper.angle - FLIPPER_REST_ANGLE_LEFT) < FLIPPER_SPEED * 2) ||
+                     (leftFlipper.targetAngle === FLIPPER_REST_ANGLE_LEFT && Math.abs(leftFlipper.angle - FLIPPER_ACTIVE_ANGLE_LEFT) < FLIPPER_SPEED * 2))) {
+                    // Flipper hareketi için hafif ses
+                    if (!ball.isMoving || !gameActive) {
+                        playSound('flipper_hit');
+                    }
+                }
+            }
+            
+            // Sağ flipper'ı güncelle
+            if (rightFlipper.angle !== rightFlipper.targetAngle) {
+                // Eğer hedef açı mevcut açıdan büyükse, açıyı artır
+                if (rightFlipper.targetAngle > rightFlipper.angle) {
+                    rightFlipper.angle = Math.min(rightFlipper.targetAngle, rightFlipper.angle + FLIPPER_SPEED);
+                } 
+                // Eğer hedef açı mevcut açıdan küçükse, açıyı azalt
+                else {
+                    rightFlipper.angle = Math.max(rightFlipper.targetAngle, rightFlipper.angle - FLIPPER_SPEED);
+                }
+                
+                // Flipper aktifse ve hareketin başındaysa ses çal
+                if (rightFlipper.active && 
+                    ((rightFlipper.targetAngle === FLIPPER_ACTIVE_ANGLE_RIGHT && Math.abs(rightFlipper.angle - FLIPPER_REST_ANGLE_RIGHT) < FLIPPER_SPEED * 2) ||
+                     (rightFlipper.targetAngle === FLIPPER_REST_ANGLE_RIGHT && Math.abs(rightFlipper.angle - FLIPPER_ACTIVE_ANGLE_RIGHT) < FLIPPER_SPEED * 2))) {
+                    // Flipper hareketi için hafif ses
+                    if (!ball.isMoving || !gameActive) {
+                        playSound('flipper_hit');
+                    }
+                }
+            }
+        }
+        /**
+         * Bir noktadan doğru parçasına olan mesafenin karesini hesapla
+         * @param {number} px - Noktanın x koordinatı
+         * @param {number} py - Noktanın y koordinatı
+         * @param {number} x1 - Doğru parçasının ilk noktasının x koordinatı
+         * @param {number} y1 - Doğru parçasının ilk noktasının y koordinatı
+         * @param {number} x2 - Doğru parçasının ikinci noktasının x koordinatı
+         * @param {number} y2 - Doğru parçasının ikinci noktasının y koordinatı
+         * @returns {number} Noktadan doğru parçasına olan mesafenin karesi
+         */
+        function distToSegmentSquared(px, py, x1, y1, x2, y2) {
+            // Doğru parçasının uzunluğunun karesini hesapla
+            const segmentLengthSquared = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+            
+            // Eğer doğru parçası bir noktaysa (uzunluğu sıfırsa), mesafe o noktaya olan mesafedir
+            if (segmentLengthSquared === 0) {
+                return (px - x1) * (px - x1) + (py - y1) * (py - y1);
+            }
+            
+            // Noktanın doğru parçasına dik izdüşümünü hesapla
+            // t, doğru parçası boyunca mesafenin yüzdesini temsil eder
+            let t = ((px - x1) * (x2 - x1) + (py - y1) * (y2 - y1)) / segmentLengthSquared;
+            
+            // Doğru parçası üzerindeki en yakın noktayı bulmak için t'yi 0 ile 1 arasında sınırla
+            t = Math.max(0, Math.min(1, t));
+            
+            // Doğru parçası üzerindeki en yakın noktanın gerçek koordinatlarını hesapla
+            const closestX = x1 + t * (x2 - x1);
+            const closestY = y1 + t * (y2 - y1);
+            
+            // Nokta ile doğru parçası üzerindeki en yakın nokta arasındaki mesafenin karesini döndür
+            return (px - closestX) * (px - closestX) + (py - closestY) * (py - closestY);
+        }
+        
+        function checkFlipperCollision(f){
+            const tX=f.x+Math.cos(f.angle)*f.length/2;
+            const tY=f.y+Math.sin(f.angle)*f.length/2;
+            const bX=f.x-Math.cos(f.angle)*f.length/2;
+            const bY=f.y-Math.sin(f.angle)*f.length/2;
+            const dSq=distToSegmentSquared(ball.x,ball.y,bX,bY,tX,tY);
+
+            if(dSq<(ball.radius+f.width/2)*(ball.radius+f.width/2)){
+                let nA=f.angle-Math.PI/2;
+                if(f===rightFlipper)nA=f.angle+Math.PI/2;
+                const bLY=-Math.sin(f.angle)*(ball.x-f.x)+Math.cos(f.angle)*(ball.y-f.y);
+                if(bLY>0&&f===leftFlipper)nA=f.angle+Math.PI/2;
+                if(bLY<0&&f===rightFlipper)nA=f.angle-Math.PI/2;
+                
+                let nX=Math.cos(nA);
+                let nY=Math.sin(nA);
+                const dTL=Math.sqrt(dSq);
+                const ov=(ball.radius+f.width/2)-dTL;
+
+                if(ov>.01){
+                    ball.x+=nX*ov*1.01;
+                    ball.y+=nY*ov*1.01;
+                }
+                const dot=ball.dx*nX+ball.dy*nY;
+
+                if(dot<0||ov>.01){
+                    let wAH=false; // aktif vuruş mu
+                    let cFP=0; // flipper gücü
+                    let rFH=FLIPPER_RESTITUTION_PASSIVE; // çarpma esnekliği
+                    if(f.active&&(f.angle!==(f===leftFlipper?FLIPPER_REST_ANGLE_LEFT:FLIPPER_REST_ANGLE_RIGHT))){
+                        wAH=true;
+                        rFH=FLIPPER_RESTITUTION_ACTIVE;
+                        let fP=Math.abs(f.angle-(f===leftFlipper?FLIPPER_REST_ANGLE_LEFT:FLIPPER_REST_ANGLE_RIGHT))/Math.abs((f===leftFlipper?FLIPPER_ACTIVE_ANGLE_LEFT:FLIPPER_ACTIVE_ANGLE_RIGHT)-(f===leftFlipper?FLIPPER_REST_ANGLE_LEFT:FLIPPER_REST_ANGLE_RIGHT));
+                        fP=Math.max(.2,Math.min(1,fP)); // flipperPercentageMoved
+                        cFP=FLIPPER_POWER*fP;
+                        gameScore+=POINTS_FLIPPER_HIT;
+                        updateScoreDisplay();
+                        playSound('flipper_hit');
+                    }
+                    let rDX=ball.dx-(1+rFH)*dot*nX; // yansıma dx
+                    let rDY=ball.dy-(1+rFH)*dot*nY; // yansıma dy
+                    ball.dx=rDX;
+                    ball.dy=rDY;
+
+                    if(wAH){
+                        const pM=cFP; // vuruş gücü
+                        ball.dx += nX * pM * 0.6; // Yatay itme güçlendirildi
+                        ball.dy += nY * pM * 0.95; // Dikey itme güçlendirildi
+                        
+                        // FIXED: Daha hafif yukarı yönde itme
+                        ball.dy -= (pM * 0.20 + Math.random() * 1.5); 
+                        
+                        let currentSpeed = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy);
+                        if (currentSpeed > MAX_SPEED_AFTER_FLIPPER) {
+                            ball.dx = (ball.dx / currentSpeed) * MAX_SPEED_AFTER_FLIPPER;
+                            ball.dy = (ball.dy / currentSpeed) * MAX_SPEED_AFTER_FLIPPER;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function handleDynamicObstacleCollisions(){
+            if(!ball.isMoving)return;
+            
+            const allCollisionElements = [...obstacles]; 
+
+            allCollisionElements.forEach(o=>{
+                let cD=null;
+                if(o.type ==='wall' || o.type === 'sideWall' || o.type === 'booster'){ 
+                    let cX=Math.max(o.x,Math.min(ball.x,o.x+o.width));
+                    let cY=Math.max(o.y,Math.min(ball.y,o.y+o.height));
+                    const dX=ball.x-cX;const dY=ball.y-cY;
+                    const dSq=dX*dX+dY*dY;
+                    if(dSq<ball.radius*ball.radius&&dSq>1e-9){
+                        const dist=Math.sqrt(dSq);
+                        let restitution = WALL_OBSTACLE_RESTITUTION;
+                        if (o.type === 'booster') restitution = BOOSTER_RESTITUTION;
+                        cD={normalX:dX/dist,normalY:dY/dist,restitution:restitution,type:o.type,overlap:ball.radius-dist};
+                        if (o.type === 'booster') { 
+                            gameScore += POINTS_BOOSTER;
+                            playSound('booster_hit');
+                            o.lastHitTime = Date.now(); 
+                            updateScoreDisplay();
+                        }
+                    }
+                } else if(o.type==='stone'){
+                    // Top ile taş arasındaki mesafeyi hesapla
+                    const dX = ball.x - o.x;
+                    const dY = ball.y - o.y;
+                    let dist = Math.sqrt(dX*dX + dY*dY);
+                    const cR = ball.radius + o.radius;
+                    
+                    // Çarpışma olup olmadığını kontrol et
+                    if(dist < cR) {
+                        // Sıfıra bölmeyi önlemek için sıfır mesafe durumunu işle
+                        if(dist < 0.0001) {
+                            // Mesafe sıfırsa, topun hızına dayalı olarak çarpışma yönünü belirle
+                            let pNx = 0, pNy = -1; // Yukarı yönü varsayılan
+                            const sp = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy);
+                            
+                            if(sp > 0.0001) {
+                                // Ters hareket yönünü kullan
+                                pNx = -ball.dx/sp;
+                                pNy = -ball.dy/sp;
+                            } else if(dX !== 0 || dY !== 0) {
+                                // Mevcutsa göreceli konumu kullan
+                                const tD = Math.sqrt(dX*dX + dY*dY) || 1;
+                                pNx = dX/tD;
+                                pNy = dY/tD;
+                            }
+                            
+                            // Çarpışma verilerini oluştur
+                            cD = {
+                                normalX: pNx,
+                                normalY: pNy,
+                                restitution: STONE_BUMPER_RESTITUTION,
+                                type: 'stone',
+                                overlap: cR // Sıfır mesafe durumunda tam çakışma
+                            };
+                        } else {
+                            // Normal durum: Taşın merkezinden topun merkezine vektörü kullan
+                            cD = {
+                                normalX: dX/dist,
+                                normalY: dY/dist,
+                                restitution: STONE_BUMPER_RESTITUTION,
+                                type: 'stone',
+                                overlap: cR-dist
+                            };
+                        }
+                        gameScore+=POINTS_STONE;o.lastHitTime=Date.now();playSound('ball_hit_obstacle_stone');updateScoreDisplay();
+                        createParticles(ball.x, ball.y, 10 + Math.floor(Math.abs(ball.dx) + Math.abs(ball.dy)), '#A9A2AD'); 
+                    }
+                } else if(o.type==='tree'){
+                    // Ağaç gövdesi için çarpışma dikdörtgenini belirle
+                    const treeRect = {
+                        x: o.x - o.trunkCollisionWidth/2,
+                        y: o.y - o.trunkCollisionHeight/2,
+                        width: o.trunkCollisionWidth,
+                        height: o.trunkCollisionHeight
+                    };
+                    
+                    // Dikdörtgen üzerinde topa en yakın noktayı bul
+                    let closestX = Math.max(treeRect.x, Math.min(ball.x, treeRect.x + treeRect.width));
+                    let closestY = Math.max(treeRect.y, Math.min(ball.y, treeRect.y + treeRect.height));
+                    
+                    // Top ile en yakın nokta arasındaki mesafeyi hesapla
+                    const deltaX = ball.x - closestX;
+                    const deltaY = ball.y - closestY;
+                    const distanceSquared = deltaX*deltaX + deltaY*deltaY;
+                    
+                    // Çarpışma olup olmadığını kontrol et (mesafe top yarıçapından küçük)
+                    if(distanceSquared < ball.radius*ball.radius && distanceSquared > 0.0001){
+                        const distance = Math.sqrt(distanceSquared);
+                        
+                        // Çarpışma verilerini oluştur
+                        cD = {
+                            normalX: deltaX/distance,
+                            normalY: deltaY/distance,
+                            restitution: TREE_BUMPER_RESTITUTION,
+                            type: 'tree',
+                            overlap: ball.radius - distance
+                        };
+                        
+                        // Puan ekle, ses çal ve parçacıklar oluştur
+                        gameScore += POINTS_TREE;
+                        o.lastHitTime = Date.now();
+                        playSound('ball_hit_obstacle_tree');
+                        updateScoreDisplay();
+                        createParticles(ball.x, ball.y, 8 + Math.floor(Math.abs(ball.dx) + Math.abs(ball.dy)), '#5AA844');
+                    }
+                }
+
+                if(cD){
+                    if(cD.overlap>0){
+                        ball.x+=cD.normalX*cD.overlap*1.02; 
+                        ball.y+=cD.normalY*cD.overlap*1.02;
+                    }
+                    const dot=ball.dx*cD.normalX+ball.dy*cD.normalY;
+                    if(dot<0 || (o.type === 'booster' && cD.overlap > 0.1) ){ 
+                        ball.dx-=(1+cD.restitution)*dot*cD.normalX;
+                        ball.dy-=(1+cD.restitution)*dot*cD.normalY;
+                        
+                        if(o.type==='stone'||o.type==='tree'){
+                            ball.dx+=cD.normalX*BUMPER_KICK_MAGNITUDE;
+                            ball.dy+=cD.normalY*BUMPER_KICK_MAGNITUDE;
+                        } else if (o.type === 'booster') { 
+                            // Dikey ve yatay itme kuvvetini belirleme
+                            const boostMagnitudeY = -BOOSTER_POWER * 0.8; // Yukarıya doğru daha büyük itme kuvveti
+                            
+                            // Topun mevcut yönüne göre yatay itme yönünü belirleme
+                            let horizontalDirection = Math.sign(ball.dx);
+                            
+                            // Eğer top yatay olarak hareket etmiyorsa, rastgele bir yön seç
+                            if (horizontalDirection === 0) {
+                                horizontalDirection = (Math.random() > 0.5) ? 1 : -1;
+                            }
+                            
+                            const boostMagnitudeX = BOOSTER_POWER * 0.2 * horizontalDirection;
+                            
+                            // İtme kuvvetini topun hızına ekle
+                            ball.dy += boostMagnitudeY;
+                            ball.dx += boostMagnitudeX;
+                            
+                            // Daha iyi görsel efekt için parçacıklar oluştur
+                            createParticles(ball.x, ball.y, 15, '#87CEFA', 4);
+
+                            // Maksimum hızı aşmadığından emin ol
+                            let currentSpeed = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy);
+                            if (currentSpeed > MAX_SPEED_AFTER_BOOST) {
+                                ball.dx = (ball.dx / currentSpeed) * MAX_SPEED_AFTER_BOOST;
+                                ball.dy = (ball.dy / currentSpeed) * MAX_SPEED_AFTER_BOOST;
+                            }
+                        } else if(o.type==='wall' || o.type === 'sideWall'){
+                            playSound('ball_hit_wall');
+                        }
+                    }
+                }
+            });
+        }
+
+        function manageAutoFlippers() {
+            // Oyun oyun modunda değilse veya aktif değilse veya top hareket etmiyorsa, flipper'ları dinlenme konumuna getir
+            if (currentMode !== MODE_PLAY || !gameActive || !ball.isMoving) {
+                if (leftFlipper.targetAngle !== FLIPPER_REST_ANGLE_LEFT) {
+                    leftFlipper.targetAngle = FLIPPER_REST_ANGLE_LEFT;
+                    leftFlipper.active = false;
+                }
+                if (rightFlipper.targetAngle !== FLIPPER_REST_ANGLE_RIGHT) {
+                    rightFlipper.targetAngle = FLIPPER_REST_ANGLE_RIGHT;
+                    rightFlipper.active = false;
+                }
+                return;
+            }
+            
+            // Top konumu ve hızı için kısaltmalar
+            const ballX = ball.x;
+            const ballY = ball.y;
+            const ballDY = ball.dy;
+            const ballDX = ball.dx;
+            
+            // Sol flipper'ın yönetimi
+            // Flipper dinlenme konumundaysa
+            if (leftFlipper.targetAngle === FLIPPER_REST_ANGLE_LEFT && Math.abs(leftFlipper.angle - FLIPPER_REST_ANGLE_LEFT) < 0.05) {
+                // Topun sol flipper'ın çalışma bölgesinde olup olmadığını kontrol et
+                if (ballDY > 0.1 && 
+                    ballY > leftFlipper.y - FLIPPER_LENGTH * 0.95 && 
+                    ballY < leftFlipper.y + FLIPPER_WIDTH * 3 && 
+                    ballX > leftFlipper.x - FLIPPER_LENGTH * 0.5 && 
+                    ballX < leftFlipper.x + FLIPPER_LENGTH * 0.7 && 
+                    ((ballX < drain.x + FLIPPER_LENGTH * 0.3) || (ballX < leftFlipper.x + FLIPPER_LENGTH * 0.2 && ballDX < 0.5))) {
+                    
+                    // Sol flipper'ı etkinleştir
+                    leftFlipper.targetAngle = FLIPPER_ACTIVE_ANGLE_LEFT;
+                    leftFlipper.active = true;
+                }
+            } 
+            // Flipper aktifse ve etkinleştirme konumundaysa
+            else if (leftFlipper.active && leftFlipper.targetAngle === FLIPPER_ACTIVE_ANGLE_LEFT) {
+                if (leftFlipper.angle <= FLIPPER_ACTIVE_ANGLE_LEFT + FLIPPER_SPEED * 3) {
+                    // Vuruştan sonra flipper'ı dinlenme konumuna getir
+                    leftFlipper.targetAngle = FLIPPER_REST_ANGLE_LEFT;
+                }
+            }
+            
+            // Flipper dinlenme konumuna dönüş yolundaysa
+            if (leftFlipper.targetAngle === FLIPPER_REST_ANGLE_LEFT && leftFlipper.active) {
+                if (leftFlipper.angle > FLIPPER_ACTIVE_ANGLE_LEFT + FLIPPER_SPEED * 2) {
+                    // Dinlenme konumuna döndükten sonra flipper'ı devre dışı bırak
+                    leftFlipper.active = false;
+                }
+            }
+            
+            // Sağ flipper'ın yönetimi
+            // Flipper dinlenme konumundaysa
+            if (rightFlipper.targetAngle === FLIPPER_REST_ANGLE_RIGHT && Math.abs(rightFlipper.angle - FLIPPER_REST_ANGLE_RIGHT) < 0.05) {
+                // Topun sağ flipper'ın çalışma bölgesinde olup olmadığını kontrol et
+                if (ballDY > 0.1 && 
+                    ballY > rightFlipper.y - FLIPPER_LENGTH * 0.95 && 
+                    ballY < rightFlipper.y + FLIPPER_WIDTH * 3 && 
+                    ballX < rightFlipper.x + FLIPPER_LENGTH * 0.5 && 
+                    ballX > rightFlipper.x - FLIPPER_LENGTH * 0.7 && 
+                    ((ballX > drain.x - FLIPPER_LENGTH * 0.3) || (ballX > rightFlipper.x - FLIPPER_LENGTH * 0.2 && ballDX > -0.5))) {
+                    
+                    // Sağ flipper'ı etkinleştir
+                    rightFlipper.targetAngle = FLIPPER_ACTIVE_ANGLE_RIGHT;
+                    rightFlipper.active = true;
+                }
+            } 
+            // Flipper aktifse ve etkinleştirme konumundaysa
+            else if (rightFlipper.active && rightFlipper.targetAngle === FLIPPER_ACTIVE_ANGLE_RIGHT) {
+                if (rightFlipper.angle >= FLIPPER_ACTIVE_ANGLE_RIGHT - FLIPPER_SPEED * 3) {
+                    // Vuruştan sonra flipper'ı dinlenme konumuna getir
+                    rightFlipper.targetAngle = FLIPPER_REST_ANGLE_RIGHT;
+                }
+            }
+            
+            // Flipper dinlenme konumuna dönüş yolundaysa
+            if (rightFlipper.targetAngle === FLIPPER_REST_ANGLE_RIGHT && rightFlipper.active) {
+                if (rightFlipper.angle < FLIPPER_ACTIVE_ANGLE_RIGHT - FLIPPER_SPEED * 2) {
+                    // Dinlenme konumuna döndükten sonra flipper'ı devre dışı bırak
+                    rightFlipper.active = false;
+                }
+            }
+        }
+        
+        function updateBallPosition() {
+            if (!ball.isMoving) return;
+            
+            // Para kazanmak için zaman sayaçını güncelle (yalnızca oyun etkinken)
+            if (gameActive && currentMode === MODE_PLAY) {
+                playTimeMoneyCounter++;
+                if (playTimeMoneyCounter >= 60) { // Her saniye para ekle (yaklaşık 60 kare)
+                    playerMoney += MONEY_PER_SECOND_IN_PLAY;
+                    playTimeMoneyCounter = 0;
+                    updateScoreDisplay(); // Para gösterimini güncelle
+                }
+            }
+            
+            ball.dy += GRAVITY;
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+            
+            ball.dx *= ball.friction;
+            ball.dy *= ball.friction;
+            // Çok yavaşsa topun durmasını kontrol et
+            if (Math.abs(ball.dx) < ball.minSpeed && Math.abs(ball.dy) < ball.minSpeed && ball.y > canvas.height - 200) {
+                const speed = Math.sqrt(ball.dx**2 + ball.dy**2);
+                if (speed < ball.minSpeed * 0.5) {
+                    ball.dx = 0;
+                    ball.dy = 0;
+                    ball.isMoving = false;
+                    
+                    // Oyun etkinse, top kaybedildi
+                    if (gameActive) {
+                        ballLost();
+                    }
+                }
+            }
+            
+            // Not: Tekrarı önlemek için para kazanma kodu yukarıya taşındı
+            handleDynamicObstacleCollisions();
+            checkFlipperCollision(leftFlipper);
+            checkFlipperCollision(rightFlipper);
+            
+            // Panonun sağ ve sol kenarlarıyla çarpışmayı işle
+            if (ball.x + ball.radius > canvas.width) {
+                // Sağ kenarla çarpışma
+                ball.x = canvas.width - ball.radius;
+                ball.dx *= -CANVAS_EDGE_RESTITUTION;
+                playSound('ball_hit_wall');
+                createParticles(ball.x - ball.radius/2, ball.y, 5, '#FFFFFF');
+            } else if (ball.x - ball.radius < 0) {
+                // Sol kenarla çarpışma
+                ball.x = ball.radius;
+                ball.dx *= -CANVAS_EDGE_RESTITUTION;
+                playSound('ball_hit_wall');
+                createParticles(ball.x + ball.radius/2, ball.y, 5, '#FFFFFF');
+            }
+            
+            // Panonun üst kenarıyla çarpışmayı işle
+            if (ball.y - ball.radius < 0) {
+                ball.y = ball.radius;
+                ball.dy *= -CANVAS_EDGE_RESTITUTION;
+                playSound('ball_hit_wall');
+                createParticles(ball.x, ball.y + ball.radius/2, 5, '#FFFFFF');
+            }
+            
+            const dTD=Math.sqrt((ball.x-drain.x)**2+(ball.y-drain.y)**2);
+            if(dTD<drain.radius-ball.radius*.2){ballLost();}
+            else if(ball.y-ball.radius>700+ball.radius*2){ballLost();}
+        }
+        /**
+ * Top kaybını işle ve oyun durumunu yönet
+ */
+function ballLost() {
+    // Topun hareketini durdur ve oyun durumunu güncelle
+    ball.isMoving = false;
+    gameActive = false;
+    ballsLeft--;
+    
+    // Top kaybı sesini çal ve görsel efekt oluştur
+    playSound('ball_lost');
+    createParticles(ball.x, ball.y, 20, '#FDFDFD', 3);
+    
+    // Puanlara dayalı para ödülünü hesapla
+    const pointsBonus = Math.floor(gameScore * MONEY_PER_POINT_BONUS);
+    let message = `Top düştü!\n`;
+    
+    // Para ödülü varsa ekle
+    if (pointsBonus > 0) {
+        playerMoney += pointsBonus;
+        message += `Puanlardan ${pointsBonus} ek kredi kazandınız.\n`;
+        
+        // Ödül için görsel efekt oluştur
+        createParticles(moneyP.offsetLeft + moneyP.offsetWidth/2, moneyP.offsetTop + moneyP.offsetHeight/2, 15, '#FFD700', 2);
+    }
+    
+    // Oyun verilerini kaydet
+    saveGameData(); 
+
+    // Ek topların kalıp kalmadığını kontrol et
+    if (ballsLeft > 0) {
+        message += `Kalan Toplar: ${ballsLeft}`;
+        displayMessage(message, 2500);
+        
+        // Kısa bir süre sonra sonraki tur için topu sıfırla
+        const resetDelay = pointsBonus > 0 ? 2600 : 2100;
+        setTimeout(() => {
+            resetBallAndAllowLaunch();
+            // Yeni top için parlama efekti ekle
+            createParticles(ball.x, ball.y, 10, '#FFFFFF', 1);
+        }, resetDelay);
+    } else { 
+        // Oyun sonu
+        message += `Oyun Bitti!\nSon Puan: ${gameScore}\nEn Yüksek Skor: ${highScore}`;
+        displayMessage(message, 4000);
+        
+        // Oyun sonu için görsel efekt ekle
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createParticles(canvas.width/2, canvas.height/2, 30, i % 2 === 0 ? '#FFD700' : '#FF4500', 4);
+                }, i * 300);
+            }
+        }, 500);
+    }
+    
+    // Kullanıcı arayüzünü güncelle
+    updateInterface(); 
+}
+        function resetBallAndAllowLaunch(){resetBall();updateInterface();}
+        function resetBall(){ball.x=BALL_START_X;ball.y=BALL_START_Y;ball.dx=0;ball.dy=0;ball.isMoving=false;}
+        
+        function findBestLaunchParameters() {
+            // En iyi açı, hız ve skoru saklayacak değişkenler
+            let bestAngle = null;
+            let bestSpeed = 0;
+            let maxScore = -Infinity;
+            
+            // Atış için birkaç rastgele örnek dene
+            for (let i = 0; i < NUM_LAUNCH_SAMPLES; i++) {
+                // Rastgele bir açı ve hız oluştur
+                const angleOffset = (Math.random() - 0.5) * LAUNCH_ANGLE_SPREAD;
+                const currentAngle = LAUNCH_ANGLE_BASE + angleOffset;
+                const currentSpeed = LAUNCH_SPEED_MIN + Math.random() * (LAUNCH_SPEED_MAX - LAUNCH_SPEED_MIN);
+                
+                // Simülasyon topunun konumu ve hızı
+                let simX = BALL_START_X;
+                let simY = BALL_START_Y;
+                let simDx = Math.cos(currentAngle) * currentSpeed;
+                let simDy = Math.sin(currentAngle) * currentSpeed;
+                
+                // Simülasyon sonucunu takip etmek için değişkenler
+                let currentPathScore = 0;
+                let collision = false;
+                
+                // Topun yolunu simüle et
+                for (let step = 0; step < LAUNCH_SIMULATION_STEPS; step++) {
+                    // Yerçekimini uygula ve konumu güncelle
+                    simDy += SIM_GRAVITY * LAUNCH_SIMULATION_STEP_DURATION;
+                    simX += simDx * LAUNCH_SIMULATION_STEP_DURATION;
+                    simY += simDy * LAUNCH_SIMULATION_STEP_DURATION;
+                    
+                    // Pano sınırlarıyla çarpışmayı kontrol et
+                    if (simX - ball.radius < 0 || simX + ball.radius > canvas.width || simY - ball.radius < 0) {
+                        collision = true;
+                        break;
+                    }
+                    
+                    // Top panonun alt kısmına ulaşırsa, puan ekle ve devam et
+                    if (simY + ball.radius > canvas.height) {
+                        currentPathScore += 5;
+                        continue;
+                    }
+                    
+                    // Engellerle çarpışmayı kontrol et
+                    const allSimObstacles = [...obstacles];
+                    for (const obstacle of allSimObstacles) {
+                        let obstacleAABB = getObstacleAABB(obstacle);
+                        if (obstacleAABB) {
+                            // Engel üzerindeki topa en yakın noktayı bul
+                            let closestX = simX;
+                            let closestY = simY;
+                            
+                            if (simX < obstacleAABB.x) closestX = obstacleAABB.x;
+                            else if (simX > obstacleAABB.x + obstacleAABB.width) closestX = obstacleAABB.x + obstacleAABB.width;
+                            
+                            if (simY < obstacleAABB.y) closestY = obstacleAABB.y;
+                            else if (simY > obstacleAABB.y + obstacleAABB.height) closestY = obstacleAABB.y + obstacleAABB.height;
+                            
+                            // Top ile en yakın nokta arasındaki kare mesafeyi hesapla
+                            const deltaXsim = simX - closestX;
+                            const deltaYsim = simY - closestY;
+                            const distanceSquaredSim = (deltaXsim * deltaXsim) + (deltaYsim * deltaYsim);
+                            
+                            // Çarpışmayı kontrol et
+                            if (distanceSquaredSim <= ball.radius * ball.radius) {
+                                collision = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Çarpışma varsa, simülasyonu durdur
+                    if (collision) break;
+                    
+                    // Çarpışma yoksa, yola bir puan ekle
+                    currentPathScore++;
+                }
+                
+                // Çarpışma yoksa, topun yüksekliğine göre puanlar ekle
+                if (!collision) {
+                    currentPathScore += simY * 0.1;
+                }
+                
+                // Bu yol daha iyiyse en iyi yolu güncelle
+                if (currentPathScore > maxScore) {
+                    maxScore = currentPathScore;
+                    bestAngle = currentAngle;
+                    bestSpeed = currentSpeed;
+                }
+            }
+            
+            // İyi bir yol bulduysak, onu kullan, yoksa rastgele bir yol kullan
+            if (bestAngle !== null) {
+                return {
+                    dx: Math.cos(bestAngle) * bestSpeed,
+                    dy: Math.sin(bestAngle) * bestSpeed
+                };
+            } else {
+                // İyi bir yol bulamazsak, rastgele bir yol kullan
+                const randomAngle = LAUNCH_ANGLE_BASE + (Math.random() - 0.5) * LAUNCH_ANGLE_SPREAD;
+                const randomSpeed = LAUNCH_SPEED_MIN + Math.random() * (LAUNCH_SPEED_MAX - LAUNCH_SPEED_MIN);
+                return {
+                    dx: Math.cos(randomAngle) * randomSpeed,
+                    dy: Math.sin(randomAngle) * randomSpeed
+                };
+            }
+        }
+        function launchBall() {
+     // Top fırlatma koşullarını kontrol et
+    if (ballsLeft <= 0 || gameActive || currentMode !== MODE_PLAY) return;
+    
+    resetBall();
+    ball.isMoving = true;
+    gameActive = true;
+    
+    // En iyi fırlatma parametrelerini bul
+    const launchParams = findBestLaunchParameters();
+    ball.dx = launchParams.dx;
+    ball.dy = launchParams.dy;
+    
+    // Topun yeterli hızda olup olmadığını kontrol et
+    if (ball.dy < 3 && Math.abs(ball.dx) < 1) {
+        ball.dy = LAUNCH_SPEED_MIN;
+        ball.dx = (Math.random() - 0.5) * 4;
+    }
+    
+    // Para sayaçını sıfırla
+    playTimeMoneyCounter = 0;
+    
+    playSound('ball_launch');
+    updateInterface();
+}
+        function updateScoreDisplay() {
+            // Arayüz öğelerini mevcut değerlerle güncelle
+            scoreP.textContent = `Puanlar: ${gameScore}`;
+            ballsP.textContent = `Toplar: ${ballsLeft}`;
+            highScoreP.textContent = `En Yüksek Skor: ${highScore}`;
+            moneyP.textContent = `Bakiye: ${playerMoney}`;
+            
+            // Değerlere göre rengi güncelle
+            // Kalan toplar azsa, metni kırmızı yap
+            if (ballsLeft <= 1) {
+                ballsP.style.color = '#e74c3c';
+            } else {
+                ballsP.style.color = '';
+            }
+            
+            // Puan en yüksek skordan yüksekse, metni yeşil yap
+            if (gameScore > highScore) {
+                scoreP.style.color = '#2ecc71';
+            } else {
+                scoreP.style.color = '';
+            }
+        }
+        
+        [toolWallButton, toolSideWallButton, toolStoneButton, toolTreeButton, toolBoosterButton, toolEraserButton].forEach(b => { 
+            b.addEventListener('click', (e) => {
+                initializeAudio();
+                if (currentMode !== MODE_DESIGN) return;
+                let toolName = e.target.id.substring(4).toLowerCase();
+                if (toolName === "sidewall") currentTool = "sideWall"; 
+                else currentTool = toolName;
+                updateInterface();
+            });
+        });
+
+        function getMousePos(e){const r=canvas.getBoundingClientRect();const mXRC=e.clientX-r.left;const mYRC=e.clientY-r.top;const sX=canvas.width/r.width;const sY=canvas.height/r.height;return{x:mXRC*sX,y:mYRC*sY};}
+        canvas.addEventListener('mousemove',(e)=>{const p=getMousePos(e);mousePos.x=p.x;mousePos.y=p.y;mousePos.onCanvas=true;});canvas.addEventListener('mouseleave',()=>{mousePos.onCanvas=false;});
+        
+        function getObstacleAABB(o){
+            if(!o||!o.type)return null;
+            if(o.type==='wall' || o.type === 'sideWall' || o.type === 'booster'){ 
+                return{x:o.x,y:o.y,width:o.width,height:o.height};
+            } else if(o.type==='stone'){
+                return{x:o.x-o.radius,y:o.y-o.radius,width:o.radius*2,height:o.radius*2};
+            } else if(o.type==='tree'){
+                return{x:o.x-o.trunkCollisionWidth/2,y:o.y-o.trunkCollisionHeight/2,width:o.trunkCollisionWidth,height:o.trunkCollisionHeight};
+            }
+            return null;
+        }
+        function rectIntersect(r1,r2){if(!r1||!r2)return false;return!(r2.x>=r1.x+r1.width||r2.x+r2.width<=r1.x||r2.y>=r1.y+r1.height||r2.y+r2.height<=r1.y);}
+        
+        canvas.addEventListener('mousedown',(e)=>{
+            initializeAudio();
+            if(currentMode!==MODE_DESIGN)return;
+            const p=getMousePos(e);
+            const mX=p.x;const mY=p.y;
+            if(mY>PLACEMENT_RESTRICTED_BOTTOM_Y||mY<PLACEMENT_MARGIN_TOP||mX<PLACEMENT_MARGIN_SIDES||mX>canvas.width-PLACEMENT_MARGIN_SIDES){
+                if(currentTool!=='eraser'){gameStatusP.textContent="Buraya öğe yerleştirilemez.";setTimeout(()=>gameStatusP.textContent="",2000);return;}
+            }
+            if(currentTool==='eraser'){
+                for(let i=obstacles.length-1;i>=0;i--){
+                    const o=obstacles[i];
+                    let cOO=false;
+                    if(o.type==='wall' || o.type === 'sideWall' || o.type === 'booster'){ 
+                        if(mX>=o.x&&mX<=o.x+o.width&&mY>=o.y&&mY<=o.y+o.height)cOO=true;
+                    }else if(o.type==='stone'){
+                        const dSq=(mX-o.x)**2+(mY-o.y)**2;if(dSq<o.radius**2)cOO=true;
+                    }else if(o.type==='tree'){
+                        const tR={x:o.x-o.trunkCollisionWidth/2,y:o.y-o.trunkCollisionHeight/2,width:o.trunkCollisionWidth,height:o.trunkCollisionHeight};
+                        if(mX>=tR.x&&mX<=tR.x+tR.width&&mY>=tR.y&&mY<=tR.y+tR.height){cOO=true;}
+                    }
+                    if(cOO){obstacles.splice(i,1);gameStatusP.textContent="Öğe silindi.";setTimeout(()=>gameStatusP.textContent="",1500);playSound('remove_item');break;}
+                }
+            }else{
+                const cost=OBSTACLE_COSTS[currentTool];
+                if(playerMoney<cost){displayMessage(`Yeterli bakiyeniz yok! (Maliyet: ${cost} / Bakiyeniz: ${playerMoney})`,2000);playSound('no_money');return;}
+                let nO={};
+                const fS=FIXED_SIZES[currentTool];
+                if(!fS)return;
+                let pA;
+                if(currentTool==='wall'){
+                    nO={type:'wall',x:mX-fS.width/2,y:mY-fS.height/2,width:fS.width,height:fS.height,color:fS.color,topColor:fS.topColor};
+                } else if (currentTool === 'sideWall') {
+                    nO={type:'sideWall',x:mX-fS.width/2,y:mY-fS.height/2,width:fS.width,height:fS.height,color:fS.color,topColor:fS.topColor};
+                } else if(currentTool==='stone'){
+                    nO={type:'stone',x:mX,y:mY,radius:fS.radius,lastHitTime:0};
+                } else if(currentTool==='tree'){
+                    nO={type:'tree',x:mX,y:mY,trunkCollisionWidth:fS.trunkCollisionWidth,trunkCollisionHeight:fS.trunkCollisionHeight,lastHitTime:0};
+                } else if (currentTool === 'booster') { 
+                    nO={type:'booster', x:mX-fS.width/2, y:mY-fS.height/2, width:fS.width, height:fS.height, color:fS.color, topColor:fS.topColor, arrowColor:fS.arrowColor, lastHitTime:0};
+                }
+                pA=getObstacleAABB(nO);
+                if(pA){
+                    for(const eO of obstacles){ 
+                        const eA=getObstacleAABB(eO);
+                        if(rectIntersect(pA,eA)){gameStatusP.textContent="Başka bir öğenin üzerine öğe yerleştirilemez.";setTimeout(()=>gameStatusP.textContent="",2000);return;}
+                    }
+                }
+                if(Object.keys(nO).length>0){playerMoney-=cost;obstacles.push(nO);playSound('add_item');updateScoreDisplay();saveGameData();}
+            }
+        });
+        
+        startGameFromOverlayButton.addEventListener('click', () => {
+            startScreenDiv.classList.add('hidden');
+            mainUIContainerDiv.style.display = 'flex';
+            gameInitialized = true;
+            initializeAudio(); 
+            loadGameData(); 
+            const initialLevel = levels[currentLevelIndex];
+            if (initialLevel && initialLevel.type) {
+                 drawStaticBackgroundToBuffer(initialLevel.type);
+            } else {
+                 console.error("Initial level data is invalid. Defaulting background.");
+                 drawStaticBackgroundToBuffer("nature"); 
+            }
+            resetBall();
+            updateInterface(); 
+            mainLoop(); 
+        });
+
+        startGameButton.addEventListener('click', () => {
+            initializeAudio();
+            if (currentMode === MODE_DESIGN) {
+                if (ballsLeft <= 0 && gameScore > 0) { 
+                     changeLevel((currentLevelIndex + 1) % levels.length); 
+                }
+                currentMode = MODE_PLAY;
+                gameActive = false; 
+                ballsLeft = INITIAL_BALLS; 
+                gameScore = 0;      
+                resetBall();        
+            } else { // MODE_PLAY
+                if (!gameActive && ballsLeft > 0) {
+                    launchBall();
+                } else if (ballsLeft <= 0) { 
+                    currentMode = MODE_DESIGN;
+                    gameActive = false;
+                } else { 
+                    currentMode = MODE_DESIGN;
+                    gameActive = false;
+                    ball.isMoving = false; 
+                }
+            }
+            updateInterface();
+        });
+        clearObstaclesButton.addEventListener('click',()=>{initializeAudio();if(currentMode===MODE_DESIGN){obstacles.length=0;displayMessage("Masadaki tüm öğeler temizlendi.",1500);playSound('remove_item');}});
+        
+        function resetFullGame() {
+            initializeAudio();
+            gameScore = 0;
+            ballsLeft = INITIAL_BALLS;
+            playerMoney = INITIAL_MONEY; 
+            obstacles.length = 0; 
+            resetBall(); 
+            currentMode = MODE_DESIGN;
+            gameActive = false;
+            ball.isMoving = false;
+            
+            changeLevel((currentLevelIndex + 1) % levels.length); 
+            playSound('remove_item'); 
+            displayMessage("Oyun tamamen sıfırlandı.\nBaşlangıç bakiyesi geri yüklendi.", 2500);
+        }
+
+        resetGameButton.addEventListener('click', () => {
+            resetFullGame();
+        });
+
+        function mainLoop() {
+            if (!gameInitialized) { 
+                requestAnimationFrame(mainLoop);
+                return;
+            }
+            requestAnimationFrame(mainLoop);
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            drawCanvasBackground();
+            if (currentMode === MODE_DESIGN) { 
+                drawDesignGrid();
+            }
+            
+            let allDrawableItems=[
+                ...obstacles.map(o=>({...o,itemType:o.type})),
+                {itemType:'drain'}
+            ];
+            if(currentMode===MODE_PLAY||(currentMode===MODE_DESIGN&&ball.isMoving)){
+                allDrawableItems.push({itemType:'ball',...ball});
+            }
+            
+            allDrawableItems.sort((a,b)=>{ 
+                let yA=a.y,yB=b.y;
+                if(a.itemType==='drain')yA=drain.y;
+                if(b.itemType==='drain')yB=drain.y;
+
+                let eYA=yA,eYB=yB;
+                if(a.itemType==='wall' || a.itemType === 'sideWall' || a.itemType === 'booster')eYA+=a.height; 
+                else if(a.itemType==='stone')eYA+=a.radius;
+                else if(a.itemType==='tree')eYA+=a.trunkCollisionHeight/2;
+                else if(a.itemType==='ball')eYA+=ball.radius;
+                
+                if(b.itemType==='wall' || b.itemType === 'sideWall' || b.itemType === 'booster')eYB+=b.height; 
+                else if(b.itemType==='stone')eYB+=b.radius;
+                else if(b.itemType==='tree')eYB+=b.trunkCollisionHeight/2;
+                else if(b.itemType==='ball')eYB+=ball.radius;
+                
+                return eYA-eYB;
+            });
+            
+            allDrawableItems.forEach(i=>{
+                if(i.itemType==='wall' || i.itemType === 'sideWall') drawWall(i);
+                else if(i.itemType==='booster') drawBooster(i); 
+                else if(i.itemType==='stone')drawStoneAsBumper(i);
+                else if(i.itemType==='tree')drawTreeAsBumper(i);
+                else if(i.itemType==='ball')drawBall();
+                else if(i.itemType==='drain')drawDrainShape();
+            });
+
+            drawParticles(); 
+            drawFlipper(leftFlipper);drawFlipper(rightFlipper);
+            
+            if(currentMode === MODE_DESIGN && mousePos.onCanvas && currentTool !== 'eraser'){
+                drawDesignPreview();
+            }
+            
+            // Flipperları ve topu güncelle
+            updateFlippers();
+            
+            if(currentMode === MODE_PLAY) {
+                // Yalnızca oyun modunda otomatik flipperleri yönet
+                manageAutoFlippers();
+                
+                // Oyun aktifse topun konumunu güncelle
+                if(gameActive) {
+                    updateBallPosition();
+                }
+            } else if(ball.isMoving) {
+                // Tasarım modunda top hareket ediyorsa topun konumunu güncelle
+                updateBallPosition();
+            }
+            updateParticles(); 
+        }
+    </script>
+</body>
+</html>
