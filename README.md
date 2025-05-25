@@ -12,7 +12,7 @@ Kristal Top: Pinball Macerası'na hoş geldiniz! Kendi pinball sahanızı tasarl
 
 Hazır mısınız? Pinball yeteneklerinizi test etmek için aşağıdaki bağlantıya tıklayın:
 
-**➡️ [OYUNU OYNAMAK İÇİN TIKLA!](https://www.ibsar.art) ⬅️**
+**➡️ [OYUNU OYNAMAK İÇİN TIKLA!](https://imane9607.github.io/Pinball_Macerasi/) ⬅️**
 
 <!-- Oyununuzun kısa bir tanıtım videosu (YouTube) -->
 **📺 Oynanış Videosu:**
@@ -148,7 +148,7 @@ Eğer projeyi kendi bilgisayarınızda incelemek veya geliştirmek isterseniz:
 
 ## 📝 Geliştirme Sürecinde Yapay Zeka Desteği
 
-Bu projenin geliştirilmesi sırasında, bazı noktalarda fikir almak ve sorunları çözmek için zaman zaman ChatGPT-4 modelinden yardım alındı. Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında şeffaf bir şekilde paylaşılmıştır.
+Bu projenin geliştirilmesi sırasında, bazı noktalarda fikir almak ve sorunları çözmek için zaman zaman google ai  modelinden yardım alındı (https://aistudio.google.com/). Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında şeffaf bir şekilde paylaşılmıştır.
 
 *   **Yapay Zeka Kullanım Alanlarımız:**
     *   Belirli JavaScript algoritmaları için konsept oluşturma (örn: temel çarpışma tespiti).
