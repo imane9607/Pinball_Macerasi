@@ -1,7 +1,7 @@
 # Kristal Top: Pinball Macerası 🌟
 
 <p align="center">
-  <img src="assets/logo.jpeg" alt="Kristal Top: Pinball Macerası Logo" width="400">
+  <img src="assets/logo.jpeg" alt="Kristal Top: Pinball Macerası Logosu" width="400">
 </p>
 
 ## 🎮 Oyun Hakkında
@@ -14,8 +14,9 @@ Kendi pinball sahanızı tasarlayın, kristal topunuzu fırlatın ve en yüksek 
 
 <!-- Oyununuzun kısa bir tanıtım videosu (YouTube) -->
 **📺 Oynanış Videosu:**
+<!-- Lütfen aşağıdaki EKLENIZ_BURAYA kısmını kendi YouTube video ID'niz ile güncelleyin veya videonuz yoksa bu satırı kaldırın/yorum satırı yapın. -->
 [Oynanış Videosunu İzle](https://www.youtube.com/watch?v=EKLENIZ_BURAYA)
-<!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı): -->
+<!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı, EKLENIZ_BURAYA kısmını video ID'niz ile değiştirin): -->
 <!-- [![Oynanış Videosu](https://img.youtube.com/vi/EKLENIZ_BURAYA/0.jpg)](https://www.youtube.com/watch?v=EKLENIZ_BURAYA) -->
 
 ---
@@ -31,20 +32,20 @@ Bu proje, Web Tabanlı Programlama dersi kapsamında geliştirilmiş bir HTML5 C
 
 ---
 
-## 🎮 Oyun Mekanikleri ve Hedef
+## ⚙️ Oyun Mekanikleri ve Hedef
 
 **Oyunun Temel Amacı:**
 Oyun iki ana moddan oluşur: Tasarım Modu ve Oyun Modu.
 1.  **Tasarım Modu:** Bu modda, oyun tahtasına çeşitli engeller (duvarlar, taşlar, ağaçlar, hızlandırıcılar) yerleştirerek kendi özel pinball sahanızı oluşturursunuz. Her engelin bir maliyeti vardır ve mevcut bakiyeniz dahilinde yerleşim yapabilirsiniz.
 2.  **Oyun Modu:** Tasarladığınız sahada kristal topunuzu fırlatarak mümkün olan en yüksek puanı elde etmeye çalışırsınız. Topun engellere çarpması puan kazandırır. Belirli sayıda top hakkınız vardır.
 
-**Hedef:**
+**Hedefler:**
 *   Yaratıcı ve zorlayıcı pinball sahaları tasarlamak.
 *   Oyun modunda en yüksek puanı elde etmek.
 *   Farklı seviyelerde (arka plan temaları) oynayarak deneyimi çeşitlendirmek.
 *   Engelleri stratejik yerleştirerek topun hareketini optimize etmek.
 
-**Zorluk (Challenge):**
+**Zorluklar (Challenge):**
 *   Sınırlı bakiye ile etkili bir saha tasarlamak.
 *   Topu mümkün olduğunca uzun süre oyunda tutmak.
 *   Flipper'ları (otomatik) en iyi şekilde kullanarak topu kurtarmak ve puan kazandıran hedeflere yönlendirmek.
@@ -57,8 +58,8 @@ Oyun iki ana moddan oluşur: Tasarım Modu ve Oyun Modu.
 *   **Genel:**
     *   Ekrandaki düğmeler fare ile kontrol edilir.
 *   **Tasarım Modu:**
-    *   **Araç Seçimi:** Sağ paneldeki "Tasarım Araçları" bölümünden istediğiniz engeli (🧱, ❚, 🪨, 🌳, 🚀) veya silgiyi (⌫) seçin.
-    *   **Engel Yerleştirme:** Seçili araçla oyun panosuna (canvas) tıklayarak engel yerleştirin.
+    *   **Araç Seçimi:** Sağ paneldeki "Tasarım Araçları" bölümünden istediğiniz engeli (🧱 Duvar, ❚ Yan Duvar, 🪨 Taş Tampon, 🌳 Ağaç Tampon, 🚀 Hızlandırıcı) veya silgiyi (⌫ Silgi) seçin.
+    *   **Engel Yerleştirme:** Seçili araçla oyun panosuna (`canvas`) tıklayarak engel yerleştirin.
     *   **Engel Silme:** Silgi aracını seçip silmek istediğiniz engele tıklayın.
     *   **Tümünü Temizle (🗑️):** Panodaki tüm engelleri temizler.
 *   **Oyun Modu:**
@@ -98,7 +99,7 @@ Oyun iki ana moddan oluşur: Tasarım Modu ve Oyun Modu.
 <!-- Daha fazla ekran görüntüsü ekleyebilirsiniz -->
 <!--
 **Farklı Bir Seviye:**
-![Farklı Seviye Ekran Görüntüsü](EKRAN_GORUNTUSU_3_LINKI_VEYA_YOLU)
+![Farklı Seviye Ekran Görüntüsü](assets/screenshots/SEVIYE_EKRAN_GORUNTUSU.png)
 -->
 
 ---
@@ -118,14 +119,13 @@ Oyunu oynamak için herhangi bir kurulum gerekmez. Modern bir web tarayıcısın
 
 Eğer projeyi yerel makinenizde çalıştırmak isterseniz:
 1.  Bu repoyu klonlayın veya ZIP olarak indirin.
-2.  `index.html` dosyasını web tarayıcınızda açın.
+2.  İndirdiğiniz dosyalarda `index.html` dosyasını web tarayıcınızda açın.
 
 ---
 
 ## 📝 Geliştirme Sürecinde Kullanılan Yapay Zeka Araçları
 
 <!-- Bu bölümü AI.md dosyanızın bir özeti olarak düşünebilirsiniz veya doğrudan AI.md'ye yönlendirebilirsiniz. -->
-<!-- Örnek: -->
 Bu projenin geliştirilmesi sırasında zaman zaman ChatGPT-4 modelinden yardım alınmıştır. Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında bulunmaktadır.
 *   **Kullanım Alanları:**
     *   Belirli JavaScript algoritmaları için fikir edinme (örn: temel çarpışma tespiti).
@@ -139,28 +139,35 @@ Bu projenin geliştirilmesi sırasında zaman zaman ChatGPT-4 modelinden yardım
 
 ## 📜 Asset Kaynakları
 
-Bu projede kullanılan tüm görsel ve ses varlıkları programatik olarak JavaScript ile oluşturulmuştur veya standart emoji karakterleridir.
+Bu projede kullanılan varlıkların bir kısmı programatik olarak JavaScript ile oluşturulmuş, bir kısmı ise aşağıda belirtilen kaynaklardan temin edilmiştir.
 
-*   **Görsel Öğeler (Engeller, Arka Planlar):** JavaScript Canvas API kullanılarak dinamik olarak çizilmiştir. (örn: `drawPixelArtPattern`, `drawStaticBackgroundToBuffer`)
-*   **Ses Efektleri:** Web Audio API (`AudioContext`, `OscillatorNode`) kullanılarak programatik olarak üretilmiştir. (örn: `playSound` fonksiyonu)
-*   **Arka Plan Müziği:** "Town Theme" by cynicmusic - [Link](https://opengameart.org/content/town-theme-rpg) (CC-BY 3.0)
-*   **Logo:** [Ideogram AI](https://ideogram.ai/) kullanılarak oluşturulmuştur.
-*   **Font:** [Google Fonts - Cairo](https://fonts.google.com/specimen/Cairo) kullanılmıştır.
+*   **Görsel Öğeler (Engeller, Arka Planlar vb.):**
+    *   Oyun içindeki engeller, top, parçacık efektleri ve bazı arka planlar JavaScript Canvas API kullanılarak dinamik olarak çizilmiştir (örn: `drawPixelArtPattern()`, `drawStaticBackgroundToBuffer()`).
+    *   Kullanılan emojiler (🧱, ❚, 🪨, 🌳, 🚀, ⌫, 🗑️ vb.) standart Unicode karakterleridir.
+*   **Ses Efektleri:** Çoğu ses efekti (top çarpışmaları, fırlatma, engel yerleştirme vb.) Web Audio API (`AudioContext`, `OscillatorNode`) kullanılarak programatik olarak üretilmiştir (örn: `playSound()` fonksiyonu).
+*   **Arka Plan Müziği:**
+    *   **Eser:** "Town Theme"
+    *   **Sanatçı:** cynicmusic (Sourced from [OpenGameArt](https://opengameart.org/content/town-theme-rpg))
+    *   **Lisans:** [Creative Commons Attribution 3.0 (CC-BY 3.0)](https://creativecommons.org/licenses/by/3.0/)
+*   **Logo:**
+    *   Proje logosu [Ideogram AI](https://ideogram.ai/) yapay zeka aracı kullanılarak oluşturulmuştur. (`assets/logo.jpeg`)
+*   **Font:**
+    *   Projede [Cairo](https://fonts.google.com/specimen/Cairo) fontu kullanılmıştır ([Google Fonts](https://fonts.google.com/)).
 
-<!-- Eğer internetten hazır bir resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını eklemelisiniz. Örnek:
-*   **Arkaplan Müziği:** "Cool Vibes" by Kevin MacLeod - [Link](https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100844) (CC BY 3.0)
-*   **Oyuncu İkonu:** [www.flaticon.com](https://www.flaticon.com) adresinden "Pixel Star" ikonu by Freepik
+<!--
+Eğer internetten başka hazır resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını ve lisanslarını eklemelisiniz. Örnek:
+*   **İkon:** "Pixel Star" ikonu, Freepik tarafından [www.flaticon.com](https://www.flaticon.com) adresinden.
 -->
 
 ---
 
 ## 👤 Geliştirici
 
-*   **Adınız Soyadınız:** Imane Keradi
-*   **GitHub:** [imane9607](https://github.com/imane9607)
+*   **Ad Soyad:** Imane Keradi
+*   **GitHub:** [@imane9607](https://github.com/imane9607)
 
 ---
 
 *Bu proje, Web Tabanlı Programlama dersi projesi olarak hazırlanmıştır.*
-*© 2025 Tüm hakları saklıdır.*#   P i n b a l l _ M a c e r a s i 
- 
+*© [YIL] Imane Keradi. Tüm hakları saklıdır.*
+<!-- Lütfen [YIL] kısmını projenin tamamlandığı yıl ile güncelleyin. Örn: 2024 -->
