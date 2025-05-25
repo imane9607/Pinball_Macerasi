@@ -4,11 +4,13 @@
   <img src="assets/logo.jpeg" alt="Kristal Top: Pinball Macerası Logo" width="400">
 </p>
 
-<!-- Kısa ve etkileyici bir giriş veya slogan ekleyebilirsiniz -->
+## 🎮 Oyun Hakkında
+
 Kendi pinball sahanızı tasarlayın, kristal topunuzu fırlatın ve en yüksek skoru hedefleyin!
 
-<!-- Oyununuzun çalışan halinin (GitHub Pages) bağlantısı -->
-**➡️ Oyunu Oyna: [https://imane9607.github.io/Pinball_Macerasi/](https://imane9607.github.io/Pinball_Macerasi/) ⬅️**
+## 🚀 Oyunu Oyna
+
+**➡️ [https://imane9607.github.io/Pinball_Macerasi/](https://imane9607.github.io/Pinball_Macerasi/) ⬅️**
 
 <!-- Oyununuzun kısa bir tanıtım videosu (YouTube) -->
 **📺 Oynanış Videosu:**
