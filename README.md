@@ -1,173 +1,182 @@
+## 🎯 Proje Hakkında Daha Fazla Bilgi
+
+Bu proje, Web Tabanlı Programlama dersi için tutkuyla geliştirilmiş bir HTML5 Canvas oyunudur. **Pinball Pioneer** adlı harika oyundan ilham alarak, klasik "tasarla ve oyna" pinball mekaniğini JavaScript, HTML5 ve CSS kullanarak yeniden canlandırdık. Oyuncular olarak, çeşitli engellerle dolu kendi pinball sahalarınızı oluşturabilir ve ardından bu sahalarda kristal bir top ile en yüksek puanı kapmak için mücadele edebilirsiniz.
+
+**İlham Kaynağımız:**
+*   **Oyun Adı:** Pinball Pioneer
+*   **Bağlantısı:** [https://alexeckardt.itch.io/pinball-pioneer](https://alexeckardt.itch.io/pinball-pioneer)
+    *   Bu harika oyun, sadece ilham kaynağımız olmakla kalmadı, aynı zamanda geliştiricisinin başarısıyla da bizi etkiledi! "Pinball Pioneer", **GMTK Game Jam 2020** için geliştirilmiş. Dile kolay, tam **5,418 oyunun** katıldığı bu jam'de **#115. sırada** yer alarak genel sıralamada ilk %10'luk dilime girmeyi başarmış (aslında çok daha etkileyici bir şekilde **ilk ~%2.1'lik** dilimde!). Bu etkileyici başarı, projemize başlarken bize de büyük bir motivasyon kaynağı oldu.
+
+---
+
+And here's the full README with that section updated:
+
+---
+
 # Kristal Top: Pinball Macerası 🌟
 
 <p align="center">
   <img src="assets/logo.jpeg" alt="Kristal Top: Pinball Macerası Logosu" width="400">
 </p>
 
-## 🎮 Oyun Hakkında
+## 👋 Oyuna Hoş Geldiniz!
 
-Kendi pinball sahanızı tasarlayın, kristal topunuzu fırlatın ve en yüksek skoru hedefleyin!
+Kristal Top: Pinball Macerası'na hoş geldiniz! Kendi pinball sahanızı tasarlayarak yaratıcılığınızı serbest bırakın, ardından kristal topunuzu fırlatın ve en yüksek skoru hedefleyin! 🚀
 
-## 🚀 Oyunu Oyna
+## 🚀 Oyunu Hemen Oyna!
 
-**➡️ [https://imane9607.github.io/Pinball_Macerasi/](https://imane9607.github.io/Pinball_Macerasi/) ⬅️**
+Hazır mısınız? Pinball yeteneklerinizi test etmek için aşağıdaki bağlantıya tıklayın:
+
+**➡️ [OYUNU OYNAMAK İÇİN TIKLA!](https://www.ibsar.art) ⬅️**
 
 <!-- Oyununuzun kısa bir tanıtım videosu (YouTube) -->
 **📺 Oynanış Videosu:**
-<!-- Lütfen aşağıdaki EKLENIZ_BURAYA kısmını kendi YouTube video ID'niz ile güncelleyin veya videonuz yoksa bu satırı kaldırın/yorum satırı yapın. -->
-[Oynanış Videosunu İzle](https://www.youtube.com/watch?v=EKLENIZ_BURAYA)
-<!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı, EKLENIZ_BURAYA kısmını video ID'niz ile değiştirin): -->
-<!-- [![Oynanış Videosu](https://img.youtube.com/vi/EKLENIZ_BURAYA/0.jpg)](https://www.youtube.com/watch?v=EKLENIZ_BURAYA) -->
+Heyecan verici bir oynanış videosu mu arıyorsunuz? Buradan izleyebilirsiniz:
+[Oynanış Videosunu İzle](https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN)
+*(Not: Yukarıdaki bağlantı bir yer tutucudur. Lütfen kendi YouTube video linkinizi ekleyin!)*
+<!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı): -->
+<!-- [![Oynanış Videosu](https://img.youtube.com/vi/LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN/0.jpg)](https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN) -->
 
 ---
 
-## 🎯 Proje Hakkında
+## 🎯 Proje Hakkında Daha Fazla Bilgi
 
-Bu proje, Web Tabanlı Programlama dersi kapsamında geliştirilmiş bir HTML5 Canvas oyunudur. **Pinball Pioneer** adlı oyundan ilham alınarak, temel "tasarla ve oyna" pinball mekaniği JavaScript, HTML5 ve CSS kullanılarak yeniden hayata geçirilmiştir. Oyuncular, kendi pinball sahalarını çeşitli engellerle oluşturabilir ve ardından bu sahada kristal bir top ile en yüksek puanı elde etmeye çalışırlar.
+Bu proje, Web Tabanlı Programlama dersi için tutkuyla geliştirilmiş bir HTML5 Canvas oyunudur. **Pinball Pioneer** adlı harika oyundan ilham alarak, klasik "tasarla ve oyna" pinball mekaniğini JavaScript, HTML5 ve CSS kullanarak yeniden canlandırdık. Oyuncular olarak, çeşitli engellerle dolu kendi pinball sahalarınızı oluşturabilir ve ardından bu sahalarda kristal bir top ile en yüksek puanı kapmak için mücadele edebilirsiniz.
 
-**İlham Alınan Oyun:**
-*   **Adı:** Pinball Pioneer
+**İlham Kaynağımız:**
+*   **Oyun Adı:** Pinball Pioneer
 *   **Bağlantısı:** [https://alexeckardt.itch.io/pinball-pioneer](https://alexeckardt.itch.io/pinball-pioneer)
-    *   *Bu oyun GMTK Game Jam 2020 için yapılmıştır.*
+    *   Bu harika oyun, sadece ilham kaynağımız olmakla kalmadı, aynı zamanda geliştiricisinin başarısıyla da bizi etkiledi! "Pinball Pioneer", **GMTK Game Jam 2020** için geliştirilmiş. Dile kolay, tam **5,418 oyunun** katıldığı bu jam'de **#115. sırada** yer alarak genel sıralamada ilk %10'luk dilime girmeyi başarmış (aslında çok daha etkileyici bir şekilde **ilk ~%2.1'lik** dilimde!). Bu etkileyici başarı, projemize başlarken bize de büyük bir motivasyon kaynağı oldu.
 
 ---
 
-## ⚙️ Oyun Mekanikleri ve Hedef
+## 🎮 Oyun Mekanikleri ve Amacınız
 
-**Oyunun Temel Amacı:**
-Oyun iki ana moddan oluşur: Tasarım Modu ve Oyun Modu.
-1.  **Tasarım Modu:** Bu modda, oyun tahtasına çeşitli engeller (duvarlar, taşlar, ağaçlar, hızlandırıcılar) yerleştirerek kendi özel pinball sahanızı oluşturursunuz. Her engelin bir maliyeti vardır ve mevcut bakiyeniz dahilinde yerleşim yapabilirsiniz.
-2.  **Oyun Modu:** Tasarladığınız sahada kristal topunuzu fırlatarak mümkün olan en yüksek puanı elde etmeye çalışırsınız. Topun engellere çarpması puan kazandırır. Belirli sayıda top hakkınız vardır.
+**Peki, Oyunda Sizi Neler Bekliyor?**
+Oyunumuz iki heyecan verici moddan oluşuyor: Tasarım Modu ve Oyun Modu.
 
-**Hedefler:**
-*   Yaratıcı ve zorlayıcı pinball sahaları tasarlamak.
-*   Oyun modunda en yüksek puanı elde etmek.
-*   Farklı seviyelerde (arka plan temaları) oynayarak deneyimi çeşitlendirmek.
-*   Engelleri stratejik yerleştirerek topun hareketini optimize etmek.
+1.  **🎨 Tasarım Modu:** Yaratıcılığınızı konuşturma zamanı! Bu modda, oyun tahtasına çeşitli engeller (duvarlar, taşlar, ağaçlar, hızlandırıcılar) yerleştirerek kendi özel pinball sahanızı inşa edersiniz. Her engelin bir maliyeti var, bu yüzden bütçenizi akıllıca kullanın!
+2.  **🕹️ Oyun Modu:** Şaheserinizi tasarladıktan sonra sıra aksiyona geldi! Kristal topunuzu fırlatın ve tasarladığınız sahada olabildiğince yüksek bir puan elde etmeye çalışın. Topun engellere her çarpışı size puan kazandıracak. Unutmayın, sınırlı sayıda top hakkınız var!
 
-**Zorluklar (Challenge):**
-*   Sınırlı bakiye ile etkili bir saha tasarlamak.
-*   Topu mümkün olduğunca uzun süre oyunda tutmak.
-*   Flipper'ları (otomatik) en iyi şekilde kullanarak topu kurtarmak ve puan kazandıran hedeflere yönlendirmek.
-*   Engellerin yerleşimi, topun hızını ve yönünü doğrudan etkiler, bu da stratejik düşünmeyi gerektirir.
+**Hedefleriniz:**
+*   Hayal gücünüzü kullanarak yaratıcı ve zorlayıcı pinball sahaları tasarlamak.
+*   Oyun modunda en yüksek puanı elde ederek adınızı zirveye yazdırmak.
+*   Farklı arka plan temalarıyla (seviyeler) oyun deneyiminizi zenginleştirmek.
+*   Engelleri stratejik olarak yerleştirerek topun hareketini ustaca kontrol etmek.
+
+**Karşılaşacağınız Zorluklar (Challenge):**
+*   Kısıtlı bir bütçeyle en etkili ve eğlenceli sahayı tasarlamak.
+*   Topu mümkün olduğunca uzun süre oyunda tutarak puanları katlamak.
+*   Otomatik flipper'ları en iyi şekilde kullanarak topu kurtarmak ve puan getiren hedeflere yönlendirmek.
+*   Engellerin yerleşimi, topun hızını ve yönünü doğrudan etkilediğinden stratejik düşünme becerilerinizi test etmek.
 
 ---
 
-## 🕹️ Kontroller
+## 🕹️ Kontroller: Oyunu Nasıl Oynayacaksınız?
 
 *   **Genel:**
-    *   Ekrandaki düğmeler fare ile kontrol edilir.
-*   **Tasarım Modu:**
-    *   **Araç Seçimi:** Sağ paneldeki "Tasarım Araçları" bölümünden istediğiniz engeli (🧱 Duvar, ❚ Yan Duvar, 🪨 Taş Tampon, 🌳 Ağaç Tampon, 🚀 Hızlandırıcı) veya silgiyi (⌫ Silgi) seçin.
-    *   **Engel Yerleştirme:** Seçili araçla oyun panosuna (`canvas`) tıklayarak engel yerleştirin.
-    *   **Engel Silme:** Silgi aracını seçip silmek istediğiniz engele tıklayın.
-    *   **Tümünü Temizle (🗑️):** Panodaki tüm engelleri temizler.
-*   **Oyun Modu:**
-    *   **Oyunu Başlat / Topu Fırlat:** Sağ paneldeki "Oyunu Başlat" (veya "Topu Fırlat") düğmesine tıklayarak oyunu başlatın veya yeni bir top fırlatın.
-    *   **Tasarıma Dön:** Oyun devam ederken veya bittikten sonra tasarım moduna geri dönmek için bu düğmeyi kullanın.
-    *   **Flipper'lar:** Flipper'lar top yaklaştığında otomatik olarak çalışır.
+    *   Tüm arayüz düğmeleri fare ile kolayca kontrol edilebilir.
+*   **🎨 Tasarım Modu:**
+    *   **Araç Seçimi:** Sağ paneldeki "Tasarım Araçları" bölümünden istediğiniz engeli (🧱 Duvar, ❚ Yan Duvar, 🪨 Taş Tampon, 🌳 Ağaç Tampon, 🚀 Hızlandırıcı) veya silgiyi (⌫) seçin.
+    *   **Engel Yerleştirme:** Seçtiğiniz araçla oyun panosuna (canvas) tıklayarak engellerinizi yerleştirin.
+    *   **Engel Silme:** Silgi aracını seçin ve kaldırmak istediğiniz engele tıklayın.
+    *   **Tümünü Temizle (🗑️):** Tek bir tıklamayla panodaki tüm engelleri temizleyin ve yeni bir tasarıma başlayın.
+*   **🕹️ Oyun Modu:**
+    *   **Oyunu Başlat / Topu Fırlat:** Sağ paneldeki "Oyunu Başlat" (veya "Topu Fırlat") düğmesine tıklayarak maceraya atılın veya yeni bir topu oyuna sokun.
+    *   **Tasarıma Dön:** Oyun sırasında veya bittikten sonra tasarım moduna geri dönmek için bu düğmeyi kullanın.
+    *   **Flipper'lar:** Endişelenmeyin, flipper'lar top yaklaştığında otomatik olarak devreye girerek size yardımcı olacak!
 
 ---
 
-## ✨ Özellikler
+## ✨ Oyunun Öne Çıkan Özellikleri
 
-*   **Dinamik Oyun Alanı Tasarımı:** Kendi pinball sahanızı oluşturun.
-*   **Çeşitli Engeller:** Duvarlar, yan duvarlar, taş tamponlar, ağaç tamponlar ve hızlandırıcılar.
-*   **Fizik Tabanlı Top Hareketi:** Gerçekçi yerçekimi, sürtünme ve sekme efektleri.
-*   **Otomatik Flipper Mekanizması:** Topu oyunda tutmaya yardımcı olan akıllı flipper'lar.
-*   **Puanlama ve Yüksek Skor Sistemi:** En iyi skorunuzu kaydedin ve geçmeye çalışın.
-*   **Para Sistemi:** Engel yerleştirmek için kullanılan oyun içi para birimi.
-*   **Seviye Sistemi:** Farklı arka plan temaları (Yeşil Orman, Çöl Vahası, Yıldızlar Uzayı, Gün Batımı Sahili).
-*   **Programatik Ses Efektleri:** Top çarpışmaları, fırlatma, engel yerleştirme gibi çeşitli aksiyonlar için anlık sesler.
-*   **Parçacık Efektleri:** Çarpışmalarda görsel geri bildirim sağlar.
-*   **Duyarlı Arayüz (Responsive Design):** Farklı ekran boyutlarına uyum sağlar.
-*   **Başlangıç Ekranı:** Oyuna hoş bir giriş sağlar.
-*   **Yerel Kayıt (Local Storage):** En yüksek skor, bakiye ve mevcut seviye gibi veriler tarayıcıda saklanır.
+*   **🎨 Dinamik Oyun Alanı Tasarımı:** Kendi benzersiz pinball sahalarınızı yaratın!
+*   **🧱 Çeşitli Engeller:** Duvarlar, yan duvarlar, taş tamponlar, ağaç tamponlar ve hızlandırıcılarla sahanızı zenginleştirin.
+*   **🔮 Fizik Tabanlı Top Hareketi:** Gerçekçi yerçekimi, sürtünme ve sekme efektleriyle kendinizi oyunun içinde hissedin.
+*   **🤖 Otomatik Flipper Mekanizması:** Topu oyunda tutmanıza yardımcı olan akıllı flipper'lar.
+*   **🏆 Puanlama ve Yüksek Skor Sistemi:** En iyi skorunuzu kaydedin ve kendi rekorlarınızı kırmaya çalışın!
+*   **💰 Para Sistemi:** Engel yerleştirmek için kullanacağınız oyun içi para birimi ile stratejinizi belirleyin.
+*   **🖼️ Seviye Sistemi:** Farklı arka plan temaları (Yeşil Orman, Çöl Vahası, Yıldızlar Uzayı, Gün Batımı Sahili) ile görsel çeşitlilik.
+*   **🔊 Programatik Ses Efektleri:** Top çarpışmaları, fırlatma, engel yerleştirme gibi aksiyonlar için anlık ve tatmin edici sesler.
+*   **💥 Parçacık Efektleri:** Çarpışmalarda ortaya çıkan görsel efektlerle daha sürükleyici bir deneyim.
+*   **📱 Duyarlı Arayüz (Responsive Design):** Farklı ekran boyutlarına uyum sağlayarak her yerde rahatça oynayın.
+*   **🎬 Başlangıç Ekranı:** Oyuna sizi sıcak bir şekilde karşılayan bir giriş.
+*   **💾 Yerel Kayıt (Local Storage):** En yüksek skorunuz, bakiyeniz ve mevcut seviyeniz gibi önemli veriler tarayıcınızda güvenle saklanır.
 
 ---
 
-## 📸 Ekran Görüntüleri
+## 📸 Ekran Görüntüleri ile Oyuna Göz Atın!
 
 <!-- Oyununuzdan en az 2 tane güzel ekran görüntüsü ekleyin. -->
-<!-- Örnek: -->
-**Tasarım Modu:**
+**🎨 Tasarım Modundan Bir Kare:**
 ![Tasarım Modu Ekran Görüntüsü](assets/screenshots/tasarim_modu.png)
 
-**Oyun Modu:**
+**🕹️ Oyun Modundan Heyecanlı Bir An:**
 ![Oyun Modu Ekran Görüntüsü](assets/screenshots/oyun_modu.png)
 
-<!-- Daha fazla ekran görüntüsü ekleyebilirsiniz -->
+<!-- Daha fazla ekran görüntüsü eklemek isterseniz, aşağıdaki yorum satırlarını kaldırıp düzenleyebilirsiniz: -->
 <!--
-**Farklı Bir Seviye:**
+**🌄 Farklı Bir Seviyeden Manzara:**
 ![Farklı Seviye Ekran Görüntüsü](assets/screenshots/SEVIYE_EKRAN_GORUNTUSU.png)
 -->
 
 ---
 
-## 🛠️ Kullanılan Teknolojiler
+## 🛠️ Hangi Teknolojileri Kullandık?
 
-*   **HTML5:** Oyunun temel yapısı ve `canvas` elementi.
-*   **CSS3:** Arayüzün stilendirilmesi ve duyarlı tasarım.
-*   **JavaScript (ES6+):** Oyunun tüm mantığı, fizik motoru, çizim işlemleri ve etkileşimler.
-    *   *Not: Proje gereksinimleri doğrultusunda hiçbir harici JavaScript oyun kütüphanesi (Phaser, PixiJS vb.) kullanılmamıştır.*
+Bu oyunu hayata geçirirken şu teknolojilerden faydalandık:
 
----
-
-## 🚀 Kurulum ve Çalıştırma
-
-Oyunu oynamak için herhangi bir kurulum gerekmez. Modern bir web tarayıcısında (Chrome veya Firefox önerilir) yukarıdaki **"Oyunu Oyna"** bağlantısına tıklamanız yeterlidir.
-
-Eğer projeyi yerel makinenizde çalıştırmak isterseniz:
-1.  Bu repoyu klonlayın veya ZIP olarak indirin.
-2.  İndirdiğiniz dosyalarda `index.html` dosyasını web tarayıcınızda açın.
+*   **HTML5:** Oyunun temel yapısı ve `canvas` elementi için vazgeçilmezimiz.
+*   **CSS3:** Arayüzün şık görünümü, stil ve duyarlı tasarım için.
+*   **JavaScript (ES6+):** Oyunun tüm mantığı, fizik motoru, çizim işlemleri ve etkileşimler bu güçlü dil ile yazıldı.
+    *   *Not: Proje gereksinimleri doğrultusunda, herhangi bir harici JavaScript oyun kütüphanesi (Phaser, PixiJS vb.) kullanılmamıştır. Her şey saf JavaScript ile yapıldı!*
 
 ---
 
-## 📝 Geliştirme Sürecinde Kullanılan Yapay Zeka Araçları
+## 🚀 Kurulum ve Çalıştırma: Hemen Başlayın!
 
-<!-- Bu bölümü AI.md dosyanızın bir özeti olarak düşünebilirsiniz veya doğrudan AI.md'ye yönlendirebilirsiniz. -->
-Bu projenin geliştirilmesi sırasında zaman zaman ChatGPT-4 modelinden yardım alınmıştır. Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında bulunmaktadır.
-*   **Kullanım Alanları:**
-    *   Belirli JavaScript algoritmaları için fikir edinme (örn: temel çarpışma tespiti).
-    *   CSS ile ilgili bazı stil sorunlarının çözümü.
-    *   Kodda karşılaşılan hataların ayıklanması (debugging) için öneriler.
-    *   Karmaşık fonksiyonlar için açıklayıcı yorumlar yazma konusunda yardım.
+Oyunu oynamak için karmaşık kurulum adımlarına ihtiyacınız yok! Modern bir web tarayıcısında (Chrome veya Firefox önerilir) yukarıdaki **"Oyunu Hemen Oyna!"** bağlantısına tıklamanız yeterli.
 
-**Detaylar için bakınız: [AI.md](AI.md)**
+Eğer projeyi kendi bilgisayarınızda incelemek veya geliştirmek isterseniz:
+1.  Bu repoyu bilgisayarınıza klonlayın veya ZIP olarak indirin.
+2.  İndirdiğiniz klasördeki `index.html` dosyasını web tarayıcınızda açın. İşte bu kadar!
 
 ---
 
-## 📜 Asset Kaynakları
+## 📝 Geliştirme Sürecinde Yapay Zeka Desteği
 
-Bu projede kullanılan varlıkların bir kısmı programatik olarak JavaScript ile oluşturulmuş, bir kısmı ise aşağıda belirtilen kaynaklardan temin edilmiştir.
+Bu projenin geliştirilmesi sırasında, bazı noktalarda fikir almak ve sorunları çözmek için zaman zaman ChatGPT-4 modelinden yardım alındı. Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında şeffaf bir şekilde paylaşılmıştır.
 
-*   **Görsel Öğeler (Engeller, Arka Planlar vb.):**
-    *   Oyun içindeki engeller, top, parçacık efektleri ve bazı arka planlar JavaScript Canvas API kullanılarak dinamik olarak çizilmiştir (örn: `drawPixelArtPattern()`, `drawStaticBackgroundToBuffer()`).
-    *   Kullanılan emojiler (🧱, ❚, 🪨, 🌳, 🚀, ⌫, 🗑️ vb.) standart Unicode karakterleridir.
-*   **Ses Efektleri:** Çoğu ses efekti (top çarpışmaları, fırlatma, engel yerleştirme vb.) Web Audio API (`AudioContext`, `OscillatorNode`) kullanılarak programatik olarak üretilmiştir (örn: `playSound()` fonksiyonu).
-*   **Arka Plan Müziği:**
-    *   **Eser:** "Town Theme"
-    *   **Sanatçı:** cynicmusic (Sourced from [OpenGameArt](https://opengameart.org/content/town-theme-rpg))
-    *   **Lisans:** [Creative Commons Attribution 3.0 (CC-BY 3.0)](https://creativecommons.org/licenses/by/3.0/)
-*   **Logo:**
-    *   Proje logosu [Ideogram AI](https://ideogram.ai/) yapay zeka aracı kullanılarak oluşturulmuştur. (`assets/logo.jpeg`)
-*   **Font:**
-    *   Projede [Cairo](https://fonts.google.com/specimen/Cairo) fontu kullanılmıştır ([Google Fonts](https://fonts.google.com/)).
+*   **Yapay Zeka Kullanım Alanlarımız:**
+    *   Belirli JavaScript algoritmaları için konsept oluşturma (örn: temel çarpışma tespiti).
+    *   CSS ile ilgili bazı stil problemlerinin çözümünde destek.
+    *   Kodda karşılaşılan hataların ayıklanması (debugging) için öneriler alma.
+    *   Karmaşık fonksiyonlar için açıklayıcı yorumlar yazma konusunda ilham.
 
-<!--
-Eğer internetten başka hazır resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını ve lisanslarını eklemelisiniz. Örnek:
-*   **İkon:** "Pixel Star" ikonu, Freepik tarafından [www.flaticon.com](https://www.flaticon.com) adresinden.
--->
+**Daha fazla detay için lütfen göz atın: [AI.md](AI.md)**
+
+---
+
+## 📜 Asset Kaynakları ve Teşekkürler
+
+Bu projede kullanılan tüm görsel ve ses varlıkları ya programatik olarak JavaScript ile özenle oluşturulmuştur ya da standart emoji karakterleridir.
+
+*   **🎨 Görsel Öğeler (Engeller, Arka Planlar):** JavaScript Canvas API kullanılarak dinamik olarak çizilmiştir. (Örn: `drawPixelArtPattern`, `drawStaticBackgroundToBuffer` gibi fonksiyonlarla)
+*   **🔊 Ses Efektleri:** Web Audio API (`AudioContext`, `OscillatorNode`) kullanılarak programatik olarak üretilmiştir. (Örn: `playSound` fonksiyonu ile)
+*   **🎵 Arka Plan Müziği:** "Town Theme" by cynicmusic - [Link](https://opengameart.org/content/town-theme-rpg) (CC-BY 3.0) - Teşekkürler cynicmusic!
+*   **🖼️ Logo:** [Ideogram AI](https://ideogram.ai/) kullanılarak oluşturulmuştur.
+*   **✒️ Font:** [Google Fonts - Cairo](https://fonts.google.com/specimen/Cairo) kullanılmıştır.
+
+<!-- Eğer internetten hazır bir resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını eklemelisiniz. -->
 
 ---
 
 ## 👤 Geliştirici
 
 *   **Ad Soyad:** Imane Keradi
-*   **GitHub:** [@imane9607](https://github.com/imane9607)
+*   **GitHub:** [imane9607](https://github.com/imane9607)
 
 ---
 
-*Bu proje, Web Tabanlı Programlama dersi projesi olarak hazırlanmıştır.*
-*© [YIL] Imane Keradi. Tüm hakları saklıdır.*
-<!-- Lütfen [YIL] kısmını projenin tamamlandığı yıl ile güncelleyin. Örn: 2024 -->
+*Bu proje, Web Tabanlı Programlama dersi kapsamında bir öğrenci projesi olarak hazırlanmıştır.*
+*© 2024 Tüm hakları saklıdır.*
