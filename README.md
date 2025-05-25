@@ -17,8 +17,6 @@ Hazır mısınız? Pinball yeteneklerinizi test etmek için aşağıdaki bağlan
 **📺 Oynanış Videosu:**
 Heyecan verici bir oynanış videosu mu arıyorsunuz? Buradan izleyebilirsiniz:
 [Oynanış Videosunu İzle](https://youtu.be/k9fHjCXXwCw)
-*(Not: Yukarıdaki bağlantı bir yer tutucudur. Lütfen kendi YouTube video linkinizi ekleyin!)*
-
 ---
 
 ## 🎯 Proje Hakkında Daha Fazla Bilgi
