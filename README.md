@@ -102,12 +102,12 @@ Aşağıda oyunumuzdan bazı görseller bulabilirsiniz:
 
 **🎨 Tasarım Modundan Bir Kare:**
 <p align="center">
-  <img src="assets/screenshots/tasarim_modu.png" alt="Tasarım Modu Ekran Görüntüsü" width="600">
+  <img src="assets/tasarim_modu.png" alt="Tasarım Modu Ekran Görüntüsü" width="600">
 </p>
 
 **🕹️ Oyun Modundan Heyecanlı Bir An:**
 <p align="center">
-  <img src="assets/screenshots/oyun_modu.png" alt="Oyun Modu Ekran Görüntüsü" width="600">
+  <img src="assets/oyun_modu.png" alt="Oyun Modu Ekran Görüntüsü" width="600">
 </p>
 
 <!-- Daha fazla ekran görüntüsü eklemek isterseniz, aşağıdaki şablonu kullanabilirsiniz: -->
