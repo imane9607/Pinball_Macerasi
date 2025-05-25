@@ -1,18 +1,3 @@
-## 🎯 Proje Hakkında Daha Fazla Bilgi
-
-Bu proje, Web Tabanlı Programlama dersi için tutkuyla geliştirilmiş bir HTML5 Canvas oyunudur. **Pinball Pioneer** adlı harika oyundan ilham alarak, klasik "tasarla ve oyna" pinball mekaniğini JavaScript, HTML5 ve CSS kullanarak yeniden canlandırdık. Oyuncular olarak, çeşitli engellerle dolu kendi pinball sahalarınızı oluşturabilir ve ardından bu sahalarda kristal bir top ile en yüksek puanı kapmak için mücadele edebilirsiniz.
-
-**İlham Kaynağımız:**
-*   **Oyun Adı:** Pinball Pioneer
-*   **Bağlantısı:** [https://alexeckardt.itch.io/pinball-pioneer](https://alexeckardt.itch.io/pinball-pioneer)
-    *   Bu harika oyun, sadece ilham kaynağımız olmakla kalmadı, aynı zamanda geliştiricisinin başarısıyla da bizi etkiledi! "Pinball Pioneer", **GMTK Game Jam 2020** için geliştirilmiş. Dile kolay, tam **5,418 oyunun** katıldığı bu jam'de **#115. sırada** yer alarak genel sıralamada ilk %10'luk dilime girmeyi başarmış (aslında çok daha etkileyici bir şekilde **ilk ~%2.1'lik** dilimde!). Bu etkileyici başarı, projemize başlarken bize de büyük bir motivasyon kaynağı oldu.
-
----
-
-And here's the full README with that section updated:
-
----
-
 # Kristal Top: Pinball Macerası 🌟
 
 <p align="center">
@@ -35,7 +20,13 @@ Heyecan verici bir oynanış videosu mu arıyorsunuz? Buradan izleyebilirsiniz:
 [Oynanış Videosunu İzle](https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN)
 *(Not: Yukarıdaki bağlantı bir yer tutucudur. Lütfen kendi YouTube video linkinizi ekleyin!)*
 <!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı): -->
-<!-- [![Oynanış Videosu](https://img.youtube.com/vi/LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN/0.jpg)](https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN) -->
+<!--
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN">
+    <img src="https://img.youtube.com/vi/LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN/0.jpg" alt="Oynanış Videosu" width="480">
+  </a>
+</p>
+-->
 
 ---
 
@@ -107,17 +98,24 @@ Oyunumuz iki heyecan verici moddan oluşuyor: Tasarım Modu ve Oyun Modu.
 
 ## 📸 Ekran Görüntüleri ile Oyuna Göz Atın!
 
-<!-- Oyununuzdan en az 2 tane güzel ekran görüntüsü ekleyin. -->
+Aşağıda oyunumuzdan bazı görseller bulabilirsiniz:
+
 **🎨 Tasarım Modundan Bir Kare:**
-![Tasarım Modu Ekran Görüntüsü](assets/screenshots/tasarim_modu.png)
+<p align="center">
+  <img src="assets/screenshots/tasarim_modu.png" alt="Tasarım Modu Ekran Görüntüsü" width="600">
+</p>
 
 **🕹️ Oyun Modundan Heyecanlı Bir An:**
-![Oyun Modu Ekran Görüntüsü](assets/screenshots/oyun_modu.png)
+<p align="center">
+  <img src="assets/screenshots/oyun_modu.png" alt="Oyun Modu Ekran Görüntüsü" width="600">
+</p>
 
-<!-- Daha fazla ekran görüntüsü eklemek isterseniz, aşağıdaki yorum satırlarını kaldırıp düzenleyebilirsiniz: -->
+<!-- Daha fazla ekran görüntüsü eklemek isterseniz, aşağıdaki şablonu kullanabilirsiniz: -->
 <!--
 **🌄 Farklı Bir Seviyeden Manzara:**
-![Farklı Seviye Ekran Görüntüsü](assets/screenshots/SEVIYE_EKRAN_GORUNTUSU.png)
+<p align="center">
+  <img src="assets/screenshots/SEVIYE_EKRAN_GORUNTUSU.png" alt="Farklı Seviye Ekran Görüntüsü" width="600">
+</p>
 -->
 
 ---
@@ -138,8 +136,13 @@ Bu oyunu hayata geçirirken şu teknolojilerden faydalandık:
 Oyunu oynamak için karmaşık kurulum adımlarına ihtiyacınız yok! Modern bir web tarayıcısında (Chrome veya Firefox önerilir) yukarıdaki **"Oyunu Hemen Oyna!"** bağlantısına tıklamanız yeterli.
 
 Eğer projeyi kendi bilgisayarınızda incelemek veya geliştirmek isterseniz:
-1.  Bu repoyu bilgisayarınıza klonlayın veya ZIP olarak indirin.
-2.  İndirdiğiniz klasördeki `index.html` dosyasını web tarayıcınızda açın. İşte bu kadar!
+1.  Bu repoyu bilgisayarınıza klonlayın:
+    ```bash
+    git clone https://github.com/kullaniciadiniz/reponuzun-adi.git
+    ```
+    *(Not: `kullaniciadiniz/reponuzun-adi.git` kısmını kendi GitHub kullanıcı adınız ve repo adınızla değiştirin.)*
+2.  Veya repoyu ZIP olarak indirin ve dosyaları bir klasöre çıkarın.
+3.  Klonladığınız veya çıkardığınız klasördeki `index.html` dosyasını web tarayıcınızda açın. İşte bu kadar!
 
 ---
 
@@ -168,13 +171,15 @@ Bu projede kullanılan tüm görsel ve ses varlıkları ya programatik olarak Ja
 *   **✒️ Font:** [Google Fonts - Cairo](https://fonts.google.com/specimen/Cairo) kullanılmıştır.
 
 <!-- Eğer internetten hazır bir resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını eklemelisiniz. -->
+<!-- Örneğin: -->
+<!-- *   **X Resmi:** [Kaynak Adı](Link) (Lisans Türü) -->
 
 ---
 
 ## 👤 Geliştirici
 
 *   **Ad Soyad:** Imane Keradi
-*   **GitHub:** [imane9607](https://github.com/imane9607)
+*   **GitHub:** [@imane9607](https://github.com/imane9607)
 
 ---
 
