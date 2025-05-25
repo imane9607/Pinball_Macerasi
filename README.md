@@ -14,19 +14,10 @@ Hazır mısınız? Pinball yeteneklerinizi test etmek için aşağıdaki bağlan
 
 **➡️ [OYUNU OYNAMAK İÇİN TIKLA!](https://imane9607.github.io/Pinball_Macerasi/) ⬅️**
 
-<!-- Oyununuzun kısa bir tanıtım videosu (YouTube) -->
 **📺 Oynanış Videosu:**
 Heyecan verici bir oynanış videosu mu arıyorsunuz? Buradan izleyebilirsiniz:
 [Oynanış Videosunu İzle](https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN)
 *(Not: Yukarıdaki bağlantı bir yer tutucudur. Lütfen kendi YouTube video linkinizi ekleyin!)*
-<!-- Alternatif olarak videoyu gömebilirsiniz (isteğe bağlı): -->
-<!--
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN">
-    <img src="https://img.youtube.com/vi/LUTFEN_VIDEO_LINKINIZI_BURAYA_EKLEYIN/0.jpg" alt="Oynanış Videosu" width="480">
-  </a>
-</p>
--->
 
 ---
 
@@ -110,14 +101,6 @@ Aşağıda oyunumuzdan bazı görseller bulabilirsiniz:
   <img src="assets/oyun_modu.png" alt="Oyun Modu Ekran Görüntüsü" width="600">
 </p>
 
-<!-- Daha fazla ekran görüntüsü eklemek isterseniz, aşağıdaki şablonu kullanabilirsiniz: -->
-<!--
-**🌄 Farklı Bir Seviyeden Manzara:**
-<p align="center">
-  <img src="assets/screenshots/SEVIYE_EKRAN_GORUNTUSU.png" alt="Farklı Seviye Ekran Görüntüsü" width="600">
-</p>
--->
-
 ---
 
 ## 🛠️ Hangi Teknolojileri Kullandık?
@@ -138,25 +121,28 @@ Oyunu oynamak için karmaşık kurulum adımlarına ihtiyacınız yok! Modern bi
 Eğer projeyi kendi bilgisayarınızda incelemek veya geliştirmek isterseniz:
 1.  Bu repoyu bilgisayarınıza klonlayın:
     ```bash
-    git clone https://github.com/kullaniciadiniz/reponuzun-adi.git
+    git clone https://github.com/imane9607/Pinball_Macerasi.git
     ```
-    *(Not: `kullaniciadiniz/reponuzun-adi.git` kısmını kendi GitHub kullanıcı adınız ve repo adınızla değiştirin.)*
 2.  Veya repoyu ZIP olarak indirin ve dosyaları bir klasöre çıkarın.
 3.  Klonladığınız veya çıkardığınız klasördeki `index.html` dosyasını web tarayıcınızda açın. İşte bu kadar!
 
 ---
 
-## 📝 Geliştirme Sürecinde Yapay Zeka Desteği
+## 🧠 Geliştirme Sürecinde Yapay Zeka Desteği
 
-Bu projenin geliştirilmesi sırasında, bazı noktalarda fikir almak ve sorunları çözmek için zaman zaman google ai  modelinden yardım alındı (https://aistudio.google.com/). Kullanım detayları, sorulan "prompt"lar ve alınan cevaplar `AI.md` dosyasında şeffaf bir şekilde paylaşılmıştır.
+Bu projenin geliştirilmesi sırasında, karmaşık problemlerin çözümü, kod optimizasyonu, yeni özellikler için fikir üretme ve hata ayıklama gibi çeşitli aşamalarda **Google AI Studio** üzerinden **Gemini** gibi yapay zeka modellerinden destek alınmıştır. Yapay zeka, bir asistan ve danışman rolü üstlenerek geliştirme sürecini hızlandırmaya ve projenin kalitesini artırmaya yardımcı olmuştur.
 
-*   **Yapay Zeka Kullanım Alanlarımız:**
-    *   Belirli JavaScript algoritmaları için konsept oluşturma (örn: temel çarpışma tespiti).
-    *   CSS ile ilgili bazı stil problemlerinin çözümünde destek.
-    *   Kodda karşılaşılan hataların ayıklanması (debugging) için öneriler alma.
-    *   Karmaşık fonksiyonlar için açıklayıcı yorumlar yazma konusunda ilham.
+*   **Yapay Zeka Kullanım Alanlarımızdan Bazıları:**
+    *   Belirli JavaScript algoritmaları için konsept oluşturma ve iyileştirme önerileri (örn: çarpışma tespiti, yörünge hesaplama).
+    *   Performans darboğazlarını belirleme ve optimizasyon stratejileri geliştirme.
+    *   CSS ile ilgili karmaşık stil ve düzen sorunlarının çözümünde alternatif yaklaşımlar sunma.
+    *   Kodda karşılaşılan hataların (bugs) ayıklanması için potansiyel nedenler ve çözüm yolları önerme.
+    *   Karmaşık fonksiyonlar için açıklayıcı yorumlar ve dokümantasyon yazma konusunda ilham.
+    *   Kullanıcı deneyimini (UX) ve arayüz tasarımını (UI) iyileştirecek fikirler sunma.
 
-**Daha fazla detay için lütfen göz atın: [AI.md](AI.md)**
+**Bu etkileşimlerin detayları, sorulan "prompt"lar (istekler) ve yapay zekadan alınan kapsamlı yanıtlar, şeffaflık ilkesiyle `AI.md` dosyasında belgelenmiştir.**
+
+**➡️ Daha fazla detay için lütfen göz atın: [AI.md](AI.md) ⬅️**
 
 ---
 
@@ -170,10 +156,6 @@ Bu projede kullanılan tüm görsel ve ses varlıkları ya programatik olarak Ja
 *   **🖼️ Logo:** [Ideogram AI](https://ideogram.ai/) kullanılarak oluşturulmuştur.
 *   **✒️ Font:** [Google Fonts - Cairo](https://fonts.google.com/specimen/Cairo) kullanılmıştır.
 
-<!-- Eğer internetten hazır bir resim, ses dosyası veya farklı bir font kullandıysanız, buraya kaynaklarını eklemelisiniz. -->
-<!-- Örneğin: -->
-<!-- *   **X Resmi:** [Kaynak Adı](Link) (Lisans Türü) -->
-
 ---
 
 ## 👤 Geliştirici
@@ -184,4 +166,4 @@ Bu projede kullanılan tüm görsel ve ses varlıkları ya programatik olarak Ja
 ---
 
 *Bu proje, Web Tabanlı Programlama dersi kapsamında bir öğrenci projesi olarak hazırlanmıştır.*
-*© 2024 Tüm hakları saklıdır.*
+*© 2024 Tüm hakları saklıdır - Imane Keradi.*
